@@ -1,0 +1,9 @@
+https://google.com/,Google
+https://twiter.com/,Twitter
+https://facebook.com/,Facebook
+https://instagram.com/,Instagram
+https://youtube.com/,Youtube
+https://reddit.com/
+https://github.com/,Github
+https://wikipedia.org/
+https://Twitch.tv/,Twitch
