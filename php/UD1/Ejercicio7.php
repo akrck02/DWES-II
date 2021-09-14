@@ -99,6 +99,7 @@ $urls = getUrlsFromFile($file);
 
     <div id="navbar">
         <a href="./Ejercicio6.php" class="btn">6</a>
+        <b>7</b>
         <a href="./index.php" class="btn">..</a>
     </div>
 

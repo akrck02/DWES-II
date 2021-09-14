@@ -151,6 +151,7 @@ function cifrate($text)
 
     <div id="navbar">
         <a href="./index.php" class="btn">..</a>
+        <b>1</b>
         <a href="./Ejercicio2.php" class="btn">2</a>
     </div>
 

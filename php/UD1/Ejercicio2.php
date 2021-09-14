@@ -83,6 +83,7 @@
 
     <div id="navbar">
         <a href="./Ejercicio1.php" class="btn">1</a>
+        <b>2</b>
         <a href="./Ejercicio3.php" class="btn">3</a>
     </div>
 </body>

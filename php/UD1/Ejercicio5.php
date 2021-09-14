@@ -123,6 +123,7 @@ function showTwoRandomMoviesPerPerson()
     <div><?php showTwoRandomMoviesPerPerson(); ?></div>
     <div id="navbar">
         <a href="./Ejercicio4.php" class="btn">4</a>
+        <b>5</b>
         <a href="./Ejercicio6.php" class="btn">6</a>
     </div>
 

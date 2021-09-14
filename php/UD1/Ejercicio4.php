@@ -91,6 +91,7 @@ for ($i = 1; $i <= 7; $i++) {
     
     <div id="navbar">
         <a href="./Ejercicio3.php" class="btn">3</a>
+        <b>4</b>
         <a href="./Ejercicio5.php" class="btn">5</a>
     </div>
 </body>

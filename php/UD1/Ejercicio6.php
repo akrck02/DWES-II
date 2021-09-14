@@ -127,6 +127,7 @@ function showTimetable($dayArray, $startTime, $endTime, $interval)
 
     <div id="navbar">
         <a href="./Ejercicio5.php" class="btn">5</a>
+        <b>6</b>
         <a href="./Ejercicio7.php" class="btn">7</a>
     </div>
 

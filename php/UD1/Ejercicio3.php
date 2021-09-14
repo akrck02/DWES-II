@@ -91,6 +91,7 @@
 
     <div id="navbar">
         <a href="./Ejercicio2.php" class="btn">2</a>
+        <b>3</b>
         <a href="./Ejercicio4.php" class="btn">4</a>
     </div>
 </body>
