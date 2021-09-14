@@ -67,8 +67,8 @@ function randomArray($n, $min, $max)
 /** Cifrate a text by replacement */
 function cifrate($text)
 {
-    $cifrator = array("A" => "20", "H" => "9R", "M" => "abcd");
-    return str_replace(array_keys($cifrator), array_values($cifrator), $text);
+    define('cifrator', array("A" => "20", "H" => "9R", "M" => "abcd"));
+    return str_replace(array_keys(cifrator), array_values(cifrator), $text);
 }
 
 ?>
