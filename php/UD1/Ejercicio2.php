@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-    $temps = [35.3, 36.1, 37.8, 25.4, 78.1, 40.34];
+
+    $temps = [35.9, 36.7, 37.8, 25.4, 78.9, 40.34];
     $avg = array_sum($temps) / count($temps);
 
-    rsort($temps);
+    sort($temps);
     $min_temps = array_slice($temps, 0, 5);
 
-    sort($temps);
+    rsort($temps);
     $max_temps = array_slice($temps, 0, 5);
+
 ?>
 <head>
     <meta charset="UTF-8">
@@ -70,7 +72,7 @@
     <p>
         <?php 
             echo "Avg temperature (rounded): " . round($avg) . "<br>";
-            echo "Avg temperature (truncated): " . floor($avg)
+            echo "Avg temperature (truncated): " . floor($avg);
         ?>
     </p>
 

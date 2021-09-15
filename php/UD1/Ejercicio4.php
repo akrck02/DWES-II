@@ -2,23 +2,32 @@
 
 function showImages($routes)
 {
+    $cache = [];
+    $i = 1;
 
-    $routes = array_unique($routes);
+    foreach ($routes as $route) {
+        
+        $md5 = md5_file($route, true);
+        if (!in_array($md5, $cache)) {
+            $cache[$route] = $md5;
 
-    for ($i = 1; $i <=  count($routes); $i++) {
-        $route = $routes[$i - 1];
-        echo "<a href='${route}'>
-                <img style=' width: 150px; height: 150px; object-fit: cover' src='${route}'/>
-              </a>";
+            if (($i + 2) % 3 == 0) echo "<tr>";
+            echo "
+                <td><a href='${route}'>
+                    <img style=' width: 150px; height: 150px; object-fit: cover' src='${route}'/>
+                </a></td>
+                ";
+            if ($i % 3 == 0) echo "</tr>";
 
-        if ($i % 3 == 0) echo "<br>";
+            $i++;
+        }
     }
 }
 
 $base_url = "./images/";
 $photos = [];
 
-for ($i = 1; $i <= 7; $i++) {
+for ($i = 1; $i <= 9; $i++) {
     $photos[] = $base_url . $i . ".jpg";
 }
 
@@ -50,7 +59,7 @@ for ($i = 1; $i <= 7; $i++) {
 
     img:hover {
         transform: scale(1.1);
-        box-shadow: 0px 2px 4px rgba(0,0,0,.15);
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, .15);
         filter: grayscale(0);
     }
 
@@ -63,8 +72,8 @@ for ($i = 1; $i <= 7; $i++) {
 
         width: 100%;
         height: 60px;
-        
-        bottom : 10px;
+
+        bottom: 10px;
         left: 0;
         padding: 10px;
     }
@@ -80,19 +89,20 @@ for ($i = 1; $i <= 7; $i++) {
         height: 30px;
         padding: 10px;
         text-decoration: none;
-        color : #202020;
+        color: #202020;
         font-weight: bold;
     }
 </style>
 
 <body>
     <h1>Album de fotos:</h1>
-    <div> <?php showImages($photos); ?> </div>
-    
+    <table> <?php showImages($photos); ?> </table>
+
     <div id="navbar">
         <a href="./Ejercicio3.php" class="btn">3</a>
         <b>4</b>
         <a href="./Ejercicio5.php" class="btn">5</a>
     </div>
 </body>
+
 </html>
