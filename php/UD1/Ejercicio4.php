@@ -24,6 +24,7 @@ function showImages($routes)
     }
 }
 
+
 $base_url = "./images/";
 $photos = [];
 
@@ -93,7 +94,6 @@ for ($i = 1; $i <= 9; $i++) {
         font-weight: bold;
     }
 </style>
-
 <body>
     <h1>Album de fotos:</h1>
     <table> <?php showImages($photos); ?> </table>

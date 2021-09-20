@@ -113,7 +113,11 @@ function showTwoRandomMoviesPerPerson()
         <b>
         <?php                   
             $favoriteMovie = "The lord of the rings";
-            echo "People how love '${favoriteMovie}' :";        
+
+            if(isset($_GET['peli']))
+                $favoriteMovie = $_GET['peli'];
+
+            echo "People who love '${favoriteMovie}' :";        
         ?> 
         </b>
         <?php echo howManyHasFavorite($favoriteMovie) ?><br><br>

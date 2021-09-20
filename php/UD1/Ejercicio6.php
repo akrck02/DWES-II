@@ -17,14 +17,31 @@ function showTimetable($dayArray, $startTime, $endTime, $interval)
 
     # Create the table header
     echo "<tr>";
-    echo "<th>Hora</th>";
+    echo "<th style='background: dodgerblue; '>Hora</th>";
     foreach ($dayArray as $day) {
         echo "<th>$day</th>";
     }
     echo "</tr>";
 
-    # Create the table body
-    for ($i = $start; $i < $end; $i += $interval) {
+    if ($start > $end) {
+
+        $dayEnd = 24 * 60;
+        $background = true;
+
+        drawRows($dayArray,$start,$dayEnd,$interval);
+    } else drawRows($dayArray,$start,$end,$interval);
+    
+
+    echo "</table>";
+}
+
+
+function drawRows($dayArray, $start, $end, $interval) {
+
+         $background = false;
+       # Create the table body
+       for ($i = $start; $i < $end; $i += $interval) {
+        $background =! $background;
 
         # Format the time
         $hour = floor($i / 60);
@@ -39,14 +56,14 @@ function showTimetable($dayArray, $startTime, $endTime, $interval)
 
         # Draw the row
         echo "<tr>";
-        echo "<td>" . $hour . ":" . $minutes . "</td>";
+        echo "<td style='background:".($background ? "#fff" : "#f1f1f1")."'>" . $hour . ":" . $minutes . "</td>";
+        
         foreach ($dayArray as $day)
-            echo "<td></td>";
+            echo "<td style='background:".($background ? "#fff" : "#f1f1f1")."'></td>";
 
         echo "</tr>";
+    
     }
-
-    echo "</table>";
 }
 
 ?>
@@ -69,20 +86,24 @@ function showTimetable($dayArray, $startTime, $endTime, $interval)
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    th,td {
+    th,
+    td {
         padding: 10px;
+        border-radius:6px;
     }
 
     th {
-        
+
         background: #202020;
         color: #fafafa;
+      
     }
 
     td {
-        background : #fafafa;
+        background: #fafafa;
         border: 2px solid #f1f1f1;
     }
+
     #navbar {
         position: fixed;
         display: flex;
@@ -122,7 +143,7 @@ function showTimetable($dayArray, $startTime, $endTime, $interval)
     $days = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
 
     # Show the timetable
-    showTimetable($days, "8:10", "10:15", 24);
+    showTimetable($days, "21:10", "14:15", 24);
     ?>
 
     <div id="navbar">
@@ -133,5 +154,4 @@ function showTimetable($dayArray, $startTime, $endTime, $interval)
 
 
 </body>
-
 </html>
