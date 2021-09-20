@@ -148,13 +148,6 @@ function cifrate($text)
     <p><?php echo str_replace('ñ', 'gn', "la ñiña se baña en la playa mientras come piña")  ?></p>
     <p><?php echo "Random array: [" . join(' , ', randomArray(5, 1, 10))."]" ?></p>
     <p><?php echo "Cifrated 'HOLA AMO' : " . cifrate("HOLA AMO")?></p>
-
-    <div id="navbar">
-        <a href="./index.php" class="btn">..</a>
-        <b>1</b>
-        <a href="./Ejercicio2.php" class="btn">2</a>
-    </div>
-
 </body>
 
 </html>

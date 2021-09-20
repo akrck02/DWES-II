@@ -1,3 +1,8 @@
+<?php 
+    require_once "./styles/styles.php"; 
+    require_once "./styles/components.php"; 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,6 +12,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tanda 2 - Ejercicio 1</title>
 </head>
+<style>
+    <?php
+        echo body();
+        echo submit();
+        echo select();
+        echo label(); 
+        echo table_data();
+        echo input_text();
+        echo fixed_navbar();
+        echo error();
+        echo result();
+    ?>
+</style>
 <?php
 
 define("DESPL_ARRAY", [3, 5, 10]);
@@ -41,7 +59,10 @@ function substCifrate($text, $filename)
 
     for ($i = 0; $i < strlen($text); $i++) {
         $index = array_search(strtolower($text[$i]), ABC);
-        $new .= $abc[$index];
+        if($index === false) $new.= $text[$i];
+        else $new .= $abc[$index];
+
+        
     }
 
     return $new;
@@ -66,7 +87,7 @@ $result = "";
 if (isset($cesar)) {
     if (isset($despl)) {
         if ($text != "") {
-            $result = cesarCifrate($text, $despl);
+            $result = cesarCifrate(urldecode($text), $despl);
         } else $text_error = true;
     } else $radio_error = true;
 }
@@ -75,7 +96,7 @@ if (isset($cesar)) {
 if (isset($sub)) {
     if ($text != "") {
         if (isset($filename)) {
-            $result = substCifrate($text, $filename);
+            $result = substCifrate(urldecode($text), $filename);
         } else $file_error = true;
     } else $text_error = true;
 }
@@ -83,6 +104,7 @@ if (isset($sub)) {
 ?>
 
 <body>
+    <h1>Cifrador M4x1m0 v0.34</h1>
     <form action="./Ejercicio1.php" method="get">
         <table>
             <tr>
@@ -94,7 +116,7 @@ if (isset($sub)) {
                 <td>
                     <?php
                     foreach (DESPL_ARRAY as $d) {
-                        echo "<input type='radio' ". ($despl == $d ? "checked":"")." name='despl' value='$d'>$d<br>";
+                        echo "<label><input type='radio' ". ($despl == $d ? "checked":"")." name='despl' value='$d'>$d</label><br>";
                     }
                     ?>
                 </td>
@@ -127,15 +149,14 @@ if (isset($sub)) {
         <div style="font-size: 1.2em">
             <?php
             if ($text_error)
-                echo "<br><b style='color:red'>Escriba un texto</b>";
+                echo "<br><b id='error'>Escriba un texto</b>";
             if ($radio_error)
-                echo "<br><b style='color:red'>Elija un desplazamiento</b>";
+                echo "<br><b id='error'>Elija un desplazamiento</b>";
             if ($result != "")
-                echo "<br><b> RESULTADO : $result</b>"
-
+                echo "<br><b id='result'> RESULTADO : $result</b>"
             ?>
         </div>
     </form>
+    <?php echo navbar("..",1,2,"./index.php","./Ejercicio2.php"); ?>
 </body>
-
 </html>
