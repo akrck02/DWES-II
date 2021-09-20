@@ -76,11 +76,11 @@ $text_error = false;
 $radio_error = false;
 $file_error = false;
 
-$cesar = $_GET['cesar'];
-$sub = $_GET['sub'];
-$despl = $_GET['despl'];
-$text = $_GET['text'];
-$filename = $_GET['file'];
+$cesar = isset($_GET['cesar']) ? $_GET['cesar'] : null;
+$sub = isset($_GET['sub']) ? $_GET['sub'] : null;
+$despl = isset($_GET['despl']) ? $_GET['despl'] : null;
+$text = isset($_GET['text']) ? $_GET['text'] : null;
+$filename = isset($_GET['file']) ? $_GET['file'] : null;
 $result = "";
 
 #Cifrado cesar
