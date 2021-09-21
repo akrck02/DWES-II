@@ -1,7 +1,7 @@
 <?php
     require_once "./styles/styles.php"; 
     require_once "./styles/components.php"; 
-    require_once "./lib/images.php"; 
+    require_once "./lib/data.php"; 
 ?>
 
 <!DOCTYPE html>
@@ -24,7 +24,7 @@
 
 <body>
     <h1>Imagenes.com</h1>
-    <form action="./lib/eval_imag.php" method="get">
+    <form action="./views/evaluate.php" method="get">
         <label> Cuantas imágenes quieres ver?
             <?php
             $images = getImages(IMAGE_DIR);

@@ -1,7 +1,47 @@
-<?php 
-    require_once "./styles/styles.php"; 
-    require_once "./styles/components.php"; 
+<?php
+    require_once "./styles/styles.php";
+    require_once "./styles/components.php";
+    require_once "./lib/data.php";
+    
+
+    define("DESPL_ARRAY", [3, 5, 10]);
+    define("DIR", "./secure/");
+
+    /**
+     * MAIN
+     */
+
+    $text_error = false;
+    $radio_error = false;
+    $file_error = false;
+
+    $cesar = isset($_GET['cesar']) ? $_GET['cesar'] : null;
+    $sub = isset($_GET['sub']) ? $_GET['sub'] : null;
+    $despl = isset($_GET['despl']) ? $_GET['despl'] : null;
+    $text = isset($_GET['text']) ? $_GET['text'] : null;
+    $filename = isset($_GET['file']) ? $_GET['file'] : null;
+    $result = "";
+
+    #Cifrado cesar
+    if (isset($cesar)) {
+        if (isset($despl)) {
+            if ($text != "") {
+                $result = cesarCifrate(urldecode($text), $despl);
+            } else $text_error = true;
+        } else $radio_error = true;
+    }
+
+    #cifrado sustitución
+    if (isset($sub)) {
+        if ($text != "") {
+            if (isset($filename)) {
+                $result = substCifrate(urldecode($text), $filename);
+            } else $file_error = true;
+        } else $text_error = true;
+    }
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,94 +54,17 @@
 </head>
 <style>
     <?php
-        echo body();
-        echo submit();
-        echo select();
-        echo label(); 
-        echo table_data();
-        echo input_text();
-        echo fixed_navbar();
-        echo error();
-        echo result();
+    echo body();
+    echo submit();
+    echo select();
+    echo label();
+    echo table_data();
+    echo input_text();
+    echo fixed_navbar();
+    echo error();
+    echo result();
     ?>
 </style>
-<?php
-
-define("DESPL_ARRAY", [3, 5, 10]);
-define("DIR", "./secure/");
-define("ABC",  $abc = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]);
-
-function cesarCifrate($text, $despl)
-{
-
-    $new = "";
-
-    for ($i = 0; $i < strlen($text); $i++) {
-        $letter_index =  array_search(strtolower($text[$i]), ABC);
-        $new_index = $letter_index + $despl;
-
-        if ($new_index >= count(ABC))
-            $new_index = $new_index - count(ABC);
-
-        $new .= ABC[$new_index];
-    }
-
-    return strtoupper($new);
-}
-
-function substCifrate($text, $filename)
-{
-    $file = fopen($filename, "r");
-    $abc = fread($file, filesize($filename));
-
-    fclose($file);
-    $new = "";
-
-    for ($i = 0; $i < strlen($text); $i++) {
-        $index = array_search(strtolower($text[$i]), ABC);
-        if($index === false) $new.= $text[$i];
-        else $new .= $abc[$index];
-
-        
-    }
-
-    return $new;
-}
-
-/**
- * MAIN
- */
-
-$text_error = false;
-$radio_error = false;
-$file_error = false;
-
-$cesar = isset($_GET['cesar']) ? $_GET['cesar'] : null;
-$sub = isset($_GET['sub']) ? $_GET['sub'] : null;
-$despl = isset($_GET['despl']) ? $_GET['despl'] : null;
-$text = isset($_GET['text']) ? $_GET['text'] : null;
-$filename = isset($_GET['file']) ? $_GET['file'] : null;
-$result = "";
-
-#Cifrado cesar
-if (isset($cesar)) {
-    if (isset($despl)) {
-        if ($text != "") {
-            $result = cesarCifrate(urldecode($text), $despl);
-        } else $text_error = true;
-    } else $radio_error = true;
-}
-
-#cifrado sustitución
-if (isset($sub)) {
-    if ($text != "") {
-        if (isset($filename)) {
-            $result = substCifrate(urldecode($text), $filename);
-        } else $file_error = true;
-    } else $text_error = true;
-}
-
-?>
 
 <body>
     <h1>Cifrador M4x1m0 v0.34</h1>
@@ -109,14 +72,14 @@ if (isset($sub)) {
         <table>
             <tr>
                 <td>Texto a cifrar</td>
-                <td><input type="text" name="text" id="text" value="<?php echo $text?>"></td>
+                <td><input type="text" name="text" id="text" value="<?php echo $text ?>"></td>
             </tr>
             <tr>
                 <td>Desplazamiento</td>
                 <td>
                     <?php
                     foreach (DESPL_ARRAY as $d) {
-                        echo "<label><input type='radio' ". ($despl == $d ? "checked":"")." name='despl' value='$d'>$d</label><br>";
+                        echo "<label><input type='radio' " . ($despl == $d ? "checked" : "") . " name='despl' value='$d'>$d</label><br>";
                     }
                     ?>
                 </td>
@@ -135,7 +98,7 @@ if (isset($sub)) {
                         foreach ($files as $file) {
                             if ($file != "." && $file != "..") {
 
-                                echo "<option ".(($filename == DIR.$file) ? 'selected': '')." value='".DIR."$file'>$file</option>";
+                                echo "<option " . (($filename == DIR . $file) ? 'selected' : '') . " value='" . DIR . "$file'>$file</option>";
                             }
                         }
                         ?>
@@ -157,6 +120,7 @@ if (isset($sub)) {
             ?>
         </div>
     </form>
-    <?php echo navbar("..",1,2,"./index.php","./Ejercicio2.php"); ?>
+    <?php echo navbar("..", 1, 2, "./index.php", "./Ejercicio2.php"); ?>
 </body>
+
 </html>
