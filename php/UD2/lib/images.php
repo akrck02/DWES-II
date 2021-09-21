@@ -25,24 +25,28 @@ function getRandomImages($url, $n)
 {
     $images = getImages($url);
 
-    if(count($images) == 0)
+    if (count($images) == 0)
         return [];
 
     if ($n >= count($images))
         $n = count($images);
 
-    $keys = array_rand($images, $n);
+    $keys = [];
+    for ($i = 0; $i < $n; $i++) {
+        $rand = rand(0, count($images) - 1);
 
+        while (in_array($rand, $keys)) {
+            $rand = rand(0, count($images) - 1);
+        }
 
+        $keys[] = $rand;
+    }
 
 
     $new = [];
 
-    if (is_array($keys))
-        foreach ($keys as $key)
-            $new[] = $url.$images[$key];
-    else { 
-        $new[] = $url.$images[$keys];
-    }
+    foreach ($keys as $key)
+        $new[] = $url . $images[$key];
+
     return $new;
 }

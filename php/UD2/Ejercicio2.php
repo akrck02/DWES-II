@@ -36,9 +36,9 @@
                 echo '<select name="images" id="images">';
                 for ($i = 1; $i <= $count; $i++)
                     echo "<option value='$i'>$i</option>";
-
                 echo '</select>';
             }
+
             ?>
         </label>
         <?php echo '<br><input type="submit" name="next" value="Siguiente">';?>

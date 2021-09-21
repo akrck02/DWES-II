@@ -9,76 +9,60 @@
 </head>
 <?php
 require_once "../lib/images.php";
+require_once "../styles/Ej2.php";
+
 define("ORIGIN", "../Ejercicio2.php");
 
-$next = $_GET['next'];
-$images = $_GET['images'];
+$next = isset($_GET['next']) ? $_GET['next'] : null;
+$images = isset($_GET['images']) ? $_GET['images'] : null;
+$completed = $next == "Valorar";
 
-if (!isset($next) or !isset($images))
-    header("location:" . ORIGIN);
+if (!$completed) {
+    if (!isset($next) or !isset($images))
+        header("location:" . ORIGIN);
 
-$photos = getRandomImages("../images/", $images);
+    $photos = getRandomImages("../images/", $images);
+}
 ?>
+
 <style>
-    body {
-        display: flex;
-
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    section {
-        width: 100%;
-        display: flex;
-
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
-    }
-
-    img {
-        transition: .25s;
-        border-radius: 6px;
-        margin: 10px;
-        width: 200px;
-        max-height: 200px;
-        object-fit: cover;
-        filter: grayscale(100);
-    }
-
-    div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        max-width: 500px; 
-        padding: 15px;
-    }
-
-    label {
-        cursor: pointer;
-    }
-
-    div:hover img {
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, .15);
-        transform: scale(1.1);
-        filter: grayscale(0);
-    }
+    <?php
+    echo body();
+    echo section();
+    echo img();
+    echo div();
+    echo label();
+    echo submit();
+    ?>
 </style>
 
 <body>
-    <h1> <?php echo count($photos); ?> Imagenes aleatorias</h1>
+    <?php 
+    if (!$completed)
+        echo "<h1>". count($photos) ." Imagenes aleatorias</h1>";
+    ?>
     <section>
-        <?php
-        foreach ($photos as $photo) {
-            echo "<div>";
-            echo "<img src='$photo'>";
-            echo "<label style='margin: 50px' ><input type='checkbox' name='photo[]' value='$photo'>&nbsp;Me gusta</label>";
-            echo "</div>";
-        }
-        ?>
+        <form action="<?php echo $_SERVER['PHP_SELF'] ?>">
+         <table>
+            <?php
+            if ($completed) {
+                echo "<tr><td><h1>Gracias por valorar</h1></td></tr>";
+                echo "<tr><td><a href='../Ejercicio2.php'>Volver a la página principal</a></td></tr>";
+            } else {
+                foreach ($photos as $photo) {
+                    echo "<tr>";
+                    echo "<td><img src='$photo'></td>";
+                    echo "<td><label style='margin: 50px' ><input type='checkbox' name='photo[]' value='$photo'>&nbsp;Me gusta</label></td>";
+                    echo "</tr>";
+                }
+                echo '<tr><td colspan="2"><input type="submit" name="next" value="Valorar"></td><tr>';
+            }
+            ?>
+            </table>
+
+
+            <input type="hidden" name="images" value="<?php echo $_GET['images'] ?>">
+        </form>
     </section>
 </body>
 
