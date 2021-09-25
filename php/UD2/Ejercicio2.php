@@ -31,8 +31,8 @@
                 echo "<p style='color:red'>No hay imagenes en la capeta.</p>";
             else {
                 echo '<select name="images" id="images">';
-                for ($i = 1; $i <= $count; $i++)
-                    echo "<option value='$i'>$i</option>";
+                for ($i = 0; $i <= $count; $i++)
+                    echo "<option value='".($i + 1)."'>".($i + 1)."</option>";
                 echo '</select>';
             }
 

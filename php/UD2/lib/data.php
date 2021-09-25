@@ -67,7 +67,7 @@ function getImages($url = "./")
 
     foreach ($files as $file) {
         foreach (COMPATIBLE_FILES as $extension) {
-            if (strpos($file, ".$extension") !== false) {
+            if (strrpos($file, ".$extension") !== false) {
                 $images[] = $file;
                 break;
             }
@@ -89,25 +89,15 @@ function getRandomImages($url = "./", $n = 0)
     if (count($images) == 0)
         return [];
 
-    if ($n >= count($images))
+    if ($n > count($images))
         $n = count($images);
 
-
-    $keys = [];
-    for ($i = 0; $i < $n; $i++) {
-        $rand = rand(0, count($images) - 1);
-
-        while (in_array($rand, $keys)) {
-            $rand = rand(0, count($images) - 1);
-        }
-
-        $keys[] = $rand;
-    }
+    $keys = array_keys($images);
+    shuffle($keys);
 
     $new = [];
-
-    foreach ($keys as $key)
-        $new[] = $images[$key];
+    for ($i = 0; $i < $n; $i++) 
+        $new[] = $images[$keys[$i]];
 
     return $new;
 }

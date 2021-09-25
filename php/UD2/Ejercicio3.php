@@ -2,6 +2,8 @@
 require_once "./styles/components.php";
 require_once "./lib/data.php";
 
+define("UPLOAD_DIR","./data/");
+
 function get_articles($url)
 {
     $articles = [];
@@ -20,17 +22,24 @@ function get_articles($url)
 $total = isset($_GET["total"]) ? $_GET["total"] : 0;
 $product_price = isset($_POST["product_price"]) ? $_POST["product_price"] : null;
 $product_name = isset($_POST["product_name"]) ? $_POST["product_name"] : null;
-$product_file = isset($_POST["product_file"]) ? $_POST["product_file"] : null;
+$product_file = isset($_FILES["product_file"]) ? $_FILES["product_file"] : null;
 
 $articles = get_articles("./data/articulos.txt");
-if (isset($product_name) && isset($product_price)) {
-    $articles[] = [$product_name, $product_price];
-    if(isset($product_file)) 
-        addLineToFile("./data/articulos.txt", $product_name . ";" . $product_price . ";" . $product_file);
-    else 
+if ($product_name != null and $product_price !== null) {
+  
+    if($product_file !== null) {
+        if (move_uploaded_file($_FILES['product_file']['tmp_name'],  UPLOAD_DIR . basename($product_name . ".txt") )) {
+            addLineToFile("./data/articulos.txt", $product_name . ";" . UPLOAD_DIR . basename($product_name . ".txt"));
+            $articles[] = [$product_name, $product_price, UPLOAD_DIR . basename($product_name . ".txt")];
+        } else {
+            $articles[] = [$product_name, $product_price];
+            echo "<p style='color:crimson'>ERROR: El archivo no se puedo subir, intentélo de nuevo.</p>";
+        } 
+           
+    } else {
         addLineToFile("./data/articulos.txt", $product_name . ";" . $product_price);
+    }
 }
-
 
 ?>
 
@@ -68,7 +77,8 @@ if (isset($product_name) && isset($product_price)) {
     <h2>TOTAL <?php echo $total; ?> €</h2>
 
     <h2>AÑADE ARTICULO</h2>
-    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
+    
         <table>
             <tr>
                 <th>Nombre:</th>
