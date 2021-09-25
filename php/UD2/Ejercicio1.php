@@ -1,8 +1,6 @@
 <?php
-    require_once "./styles/styles.php";
     require_once "./styles/components.php";
-    require_once "./lib/data.php";
-    
+    require_once "./lib/data.php";  
 
     define("DESPL_ARRAY", [3, 5, 10]);
     define("DIR", "./secure/");
@@ -53,17 +51,7 @@
     <title>Tanda 2 - Ejercicio 1</title>
 </head>
 <style>
-    <?php
-    echo body();
-    echo submit();
-    echo select();
-    echo label();
-    echo table_data();
-    echo input_text();
-    echo fixed_navbar();
-    echo error();
-    echo result();
-    ?>
+    <?php include_once "./styles/Ej1.css";?>
 </style>
 
 <body>
@@ -97,7 +85,6 @@
                         $files = scandir(DIR);
                         foreach ($files as $file) {
                             if ($file != "." && $file != "..") {
-
                                 echo "<option " . (($filename == DIR . $file) ? 'selected' : '') . " value='" . DIR . "$file'>$file</option>";
                             }
                         }

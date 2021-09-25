@@ -1,5 +1,4 @@
 <?php
-    require_once "./styles/styles.php"; 
     require_once "./styles/components.php"; 
     require_once "./lib/data.php"; 
 ?>
@@ -15,10 +14,8 @@
 </head>
 <style>
     <?php 
-        echo body();
-        echo select();
-        echo submit();
-        echo fixed_navbar();
+        include_once "./styles/Ej2.css";
+        include_once "./styles/styles.css";
     ?>
 </style>
 

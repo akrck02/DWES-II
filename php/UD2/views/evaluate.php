@@ -1,8 +1,8 @@
 <?php
     require_once "../lib/data.php";
-    require_once "../styles/Ej2.php";
 
     define("ORIGIN", "../Ejercicio2.php");
+    define("DIRIMG", "../images/");
 
     $next = isset($_GET['next']) ? $_GET['next'] : null;
     $images = isset($_GET['images']) ? $_GET['images'] : null;
@@ -12,10 +12,11 @@
         if (!isset($next) or !isset($images))
             header("location:" . ORIGIN);
 
-        $photos = getRandomImages("../images/", $images);
+        $photos = getRandomImages(DIRIMG, $images);
     }else {
-        $photos = $_GET['photo'];
-        addLineToFile("./data/evaluation.txt", $photos);
+        $photos = isset($_GET['photo']) ? $_GET['photo'] : null;
+        if($photos != null)
+            $added = addLineToFile("../data/evaluation.txt", $_SERVER['REMOTE_ADDR'].":", $photos);
     }
 ?>
 
@@ -28,13 +29,9 @@
     <title>Tanda 2 - Ejercicio 2</title>
 </head>
 <style>
-    <?php
-    echo body();
-    echo section();
-    echo img();
-    echo div();
-    echo label();
-    echo submit();
+    <?php 
+        include_once "../styles/components.php";
+        include_once "../styles/Ej2.css";
     ?>
 </style>
 
@@ -48,12 +45,19 @@
          <table>
             <?php
             if ($completed) {
-                echo "<tr><td><h1>Gracias por valorar</h1></td></tr>";
+                if($photos == null){
+                    echo "<tr><td><h1>Sentimos que no te haya gustado ninguna :(</h1></td></tr>";
+                } else {
+                    echo "<tr><td><h1>Gracias por valorar</h1></td></tr>";
+
+                    if(!$added)
+                        echo("<tr><td>No se pudo añadir tu valoración a la base de datos</td></tr>");
+                }
                 echo "<tr><td><a href='../Ejercicio2.php'>Volver a la página principal</a></td></tr>";
             } else {
                 foreach ($photos as $photo) {
                     echo "<tr>";
-                    echo "<td><img src='$photo'></td>";
+                    echo "<td><img src='".DIRIMG."$photo'></td>";
                     echo "<td><label style='margin: 50px' ><input type='checkbox' name='photo[]' value='$photo'>&nbsp;Me gusta</label></td>";
                     echo "</tr>";
                 }

@@ -11,7 +11,7 @@ define("ABC",  $abc = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l
  * @param $text - The text to cifrate
  * @param $despl - The number of index to move
  */
-function cesarCifrate($text, $despl)
+function cesarCifrate($text = "", $despl = 0)
 {
 
     $new = "";
@@ -36,8 +36,11 @@ function cesarCifrate($text, $despl)
  * @param $text - The text to cifrate
  * @param $filename - The file to use
  */
-function substCifrate($text, $filename)
+function substCifrate($text = "", $filename = "")
 {
+    if($filename == "")
+        return $text;
+
     $file = fopen($filename, "r");
     $abc = fread($file, filesize($filename));
 
@@ -57,7 +60,7 @@ function substCifrate($text, $filename)
  * Get the image count
  * @param $url - The directory 
  */
-function getImages($url)
+function getImages($url = "./")
 {
     $files = scandir($url);
     $images = [];
@@ -79,7 +82,7 @@ function getImages($url)
  * @param $url - The array
  * @param $n - The number of images
  */
-function getRandomImages($url, $n)
+function getRandomImages($url = "./", $n = 0)
 {
     $images = getImages($url);
 
@@ -88,6 +91,7 @@ function getRandomImages($url, $n)
 
     if ($n >= count($images))
         $n = count($images);
+
 
     $keys = [];
     for ($i = 0; $i < $n; $i++) {
@@ -100,27 +104,64 @@ function getRandomImages($url, $n)
         $keys[] = $rand;
     }
 
+    $new = [];
 
+    foreach ($keys as $key)
+        $new[] = $images[$key];
+
+    return $new;
+}
+
+#  IMPORTANT INFORMATION !!!
+# ------------------------------------------------------
+# I haven't used array_rand() but I think it's not a good idea
+# because it's not a random array without repetitions
+# ANYWAY the code would be the following
+function getRandomImageWithArrayRand($url = "./", $n = 0){
+    $images = getImages($url);
+
+    if (count($images) == 0)
+        return [];
+
+    if ($n >= count($images))
+        $n = count($images);
+
+
+    $keys = array_rand($images, $n);
     $new = [];
 
     foreach ($keys as $key)
         $new[] = $url . $images[$key];
 
     return $new;
+
 }
 
 /**
  * add a line to file
  * @param $url - The directory
  * @param $content - The line to add
+ * @return if the line was added
  */
-function addLineToFile($url, $content)
+function addLineToFile($url = "./", ...$content)
 {
 
-    $file = fopen("./data.txt", "w");
-    echo $file ? "true":"false";
+    if (!is_dir(dirname($url))) {
+        mkdir(dirname($url), 0777, true);
+    }
 
-    fwrite($file, $content . "\n");
-    fclose($file);
+    $file = fopen($url, "a");
+    if ($file != false) {
+        foreach ($content as $line) {
+            if(is_array($line))
+                fwrite($file, implode(" ", $line) . " ");
+            else
+                fwrite($file, $line . " ");
+        }
+        fwrite($file, "\n");
+        fclose($file);
+        return true;
+    } else return false;
 
+    return true;
 }
