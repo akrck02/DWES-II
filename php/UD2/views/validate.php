@@ -53,7 +53,7 @@ if (isset($_POST['login']) and isset($_POST['user']) and isset($_POST['password'
 
     switch ($status) {
         case USER_SEARCH_OUTPUT['LOGIN_CORRECT']:
-            
+            header("location: ./charla.php?user=".$user);
             break;
         case USER_SEARCH_OUTPUT['LOGIN_INCORRECT']:
             header("location: ../Ejercicio4.php?error=login&user=".$user);

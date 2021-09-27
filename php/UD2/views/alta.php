@@ -25,7 +25,6 @@ function user_exists($url, $username)
 
 function register_user($url, $username, $password)
 {
-    echo $url;
     $file = fopen($url, "a");
     if ($file != false) {
         fwrite($file, $username . ";" . $password . "\n");
@@ -50,12 +49,11 @@ if ($user !== "") {
     if ($password !== "") {
         $exists = user_exists(USER_DB, $user);
 
-        echo $exists ? "true":"false";
         if ($exists == true) {
             $exist_error = true;
         }
         else {
-            $registered = register_user(USER_DB, $user, $password);
+            $registered = register_user(USER_DB, trim($user), $password);
         }
     } else $password_error = true;
 }
@@ -99,11 +97,11 @@ if ($user !== "") {
             echo "<p style='color:crimson'>Escriba una contraseña</p>";
 
         if ($exist_error)
-            echo "<p style='color:crimson'>El usuario ya existe</p>";
+            echo "<p style='color:crimson'>El usuario ya $user existe</p>";
 
         if ($registered) {
-            echo "<p>Ok.</p>";
-            echo "<a href='../Ejercicio4.php?user=$user'>Volver al login</a>";
+            echo "<p>El usuario $user se ha dado de alta con éxito.</p>";
+            echo "<a href='../Ejercicio4.php?user=$user'>ENTRAR AL CHAT</a>";
         }
         ?>
 

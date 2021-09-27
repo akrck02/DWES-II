@@ -90,4 +90,3 @@ and open the template in the editor.
     ?>
     </body>
 </html>
-Martillo de fuego 4.78 ./data/articulos.txt 

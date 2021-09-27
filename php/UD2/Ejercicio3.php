@@ -69,6 +69,7 @@ function replace_item($url, $item, $line)
  */
 function add_or_replace_article($url, $item)
 {
+
     if(count($item) == 0)
         return false;
 
@@ -77,38 +78,34 @@ function add_or_replace_article($url, $item)
     if ($article_line !== false)
         replace_item($url, $item, $article_line);
     else
-        addLineToFile($url, $item);
+        addLineToFile($url, $item[0] . ";" . $item[1]);
 }
 
 
 /**
  *  Checkingg parameters
  */
-
 $total = isset($_GET["total"]) ? $_GET["total"] : 0;
 $product_price = isset($_POST["product_price"]) ? $_POST["product_price"] : null;
 $product_name = isset($_POST["product_name"]) ? $_POST["product_name"] : null;
 $product_file = isset($_FILES["product_file"]) ? $_FILES["product_file"] : null;
 
-
 if ($product_name != null and $product_price !== null) {
-
     $article_line = get_item_line(DB, $product_name);
 
     if ($product_file !== null) {
         if(isset($product_file['size']) and $product_file['size'] > 0){
             if (move_uploaded_file($_FILES['product_file']['tmp_name'], UPLOAD_DIR.$product_name.".txt")) 
-                add_or_replace_article($temp_url, [$product_name, $product_price, DB]);
+                add_or_replace_article( DB, [$product_name, $product_price, UPLOAD_DIR.$product_name.".txt"]);
             else 
                 echo "<p style='color:crimson'>ERROR: El archivo no se puede subir, intentélo de nuevo.</p>";
-        } else {
+        } else 
             add_or_replace_article(DB, [$product_name,$product_price]);
-        }
-        
-    } else add_or_replace_article(DB, [$product_name,$product_price]);
+    } else 
+        add_or_replace_article(DB, [$product_name,$product_price]);
 }
-$articles = get_items(DB);
 
+$articles = get_items(DB);
 ?>
 
 <!DOCTYPE html>

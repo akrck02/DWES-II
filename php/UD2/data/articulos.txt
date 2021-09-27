@@ -1,5 +1,8 @@
 Tornillo TY200;0.15
 Arandela;0.03;./data/Arandela.txt
-BisagraHG209;1.34
 Llave Allen;0.6
-juan;4.78 
+4;4
+hola;4.44
+prueba;5.5
+lol;7.2 
+juan;6.4;./data/juan.txt
