@@ -95,10 +95,6 @@ if ($product_name != null and $product_price !== null) {
 
     $article_line = get_item_line(DB, $product_name);
 
-    echo "DEBUG MODE: <hr>";
-    echo "OBJECTO ENCONTRADO EN LINEA " . $article_line . "<br>";
-    print_r($product_file);
-
     if ($product_file !== null) {
         if(isset($product_file['size']) and $product_file['size'] > 0){
             if (move_uploaded_file($_FILES['product_file']['tmp_name'], UPLOAD_DIR.$product_name.".txt")) 
