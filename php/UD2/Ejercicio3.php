@@ -110,7 +110,6 @@ $articles = get_items(DB);
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -123,8 +122,9 @@ $articles = get_items(DB);
         ?>
     </style>
 </head>
-
 <body>
+    <?php echo navbar(2, 3, 4, "./Ejercicio2.php", "./Ejercicio4.php") ?>
+
     <h1>ELIGE TU PEDIDO</h1>
     <table>
         <?php
@@ -160,8 +160,6 @@ $articles = get_items(DB);
             </tr>
         </table>
     </form>
-
-    <?php echo navbar(2, 3, 4, "./Ejercicio2.php", "./Ejercicio4.php") ?>
 </body>
 
 </html>

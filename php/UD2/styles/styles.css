@@ -1,7 +1,7 @@
 body {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     height: 100vh;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -60,7 +60,7 @@ td {
     padding: 20px;
 }
 
-input[type="text"], input[type="number"] {
+input[type="text"], input[type="number"], input[type="password"] {
     padding: 5px;
     border-radius: 3px;
     border: 2px solid #e1e1e1;

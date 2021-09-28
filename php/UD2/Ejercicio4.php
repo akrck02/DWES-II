@@ -1,3 +1,7 @@
+<?php 
+    require_once "./styles/components.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +10,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 </head>
+<style>
+    <?php
+        include_once "./styles/styles.css";
+    ?>
+</style>
 <body>
+<?php echo navbar(3, 4, 5, "./Ejercicio3.php", "./Ejercicio5.php") ?>    
 
     <form action="./views/validate.php" method="post">
     <?php 
@@ -30,6 +40,7 @@
             </tr>
         </table>
     </form>
-    
+
+  
 </body>
 </html>

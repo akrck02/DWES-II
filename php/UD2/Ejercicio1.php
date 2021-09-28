@@ -1,42 +1,42 @@
 <?php
-    require_once "./styles/components.php";
-    require_once "./lib/data.php";  
+require_once "./styles/components.php";
+require_once "./lib/data.php";
 
-    define("DESPL_ARRAY", [3, 5, 10]);
-    define("DIR", "./secure/");
+define("DESPL_ARRAY", [3, 5, 10]);
+define("DIR", "./secure/");
 
-    /**
-     * MAIN
-     */
+/**
+ * MAIN
+ */
 
-    $text_error = false;
-    $radio_error = false;
-    $file_error = false;
+$text_error = false;
+$radio_error = false;
+$file_error = false;
 
-    $cesar = isset($_GET['cesar']) ? $_GET['cesar'] : null;
-    $sub = isset($_GET['sub']) ? $_GET['sub'] : null;
-    $despl = isset($_GET['despl']) ? $_GET['despl'] : null;
-    $text = isset($_GET['text']) ? $_GET['text'] : null;
-    $filename = isset($_GET['file']) ? $_GET['file'] : null;
-    $result = "";
+$cesar = isset($_GET['cesar']) ? $_GET['cesar'] : null;
+$sub = isset($_GET['sub']) ? $_GET['sub'] : null;
+$despl = isset($_GET['despl']) ? $_GET['despl'] : null;
+$text = isset($_GET['text']) ? $_GET['text'] : null;
+$filename = isset($_GET['file']) ? $_GET['file'] : null;
+$result = "";
 
-    #Cifrado cesar
-    if (isset($cesar)) {
-        if (isset($despl)) {
-            if ($text != "") {
-                $result = cesarCifrate(urldecode($text), $despl);
-            } else $text_error = true;
-        } else $radio_error = true;
-    }
-
-    #cifrado sustitución
-    if (isset($sub)) {
+#Cifrado cesar
+if (isset($cesar)) {
+    if (isset($despl)) {
         if ($text != "") {
-            if (isset($filename)) {
-                $result = substCifrate(urldecode($text), $filename);
-            } else $file_error = true;
+            $result = cesarCifrate(urldecode($text), $despl);
         } else $text_error = true;
-    }
+    } else $radio_error = true;
+}
+
+#cifrado sustitución
+if (isset($sub)) {
+    if ($text != "") {
+        if (isset($filename)) {
+            $result = substCifrate(urldecode($text), $filename);
+        } else $file_error = true;
+    } else $text_error = true;
+}
 
 ?>
 
@@ -51,10 +51,11 @@
     <title>Tanda 2 - Ejercicio 1</title>
 </head>
 <style>
-    <?php include_once "./styles/Ej1.css";?>
+    <?php include_once "./styles/Ej1.css"; ?>
 </style>
 
 <body>
+    <?php echo navbar("..", 1, 2, "./index.php", "./Ejercicio2.php"); ?>
     <h1>Cifrador M4x1m0 v0.34</h1>
     <form action="./Ejercicio1.php" method="get">
         <table>
@@ -64,6 +65,7 @@
             </tr>
             <tr>
                 <td>Desplazamiento</td>
+
                 <td>
                     <?php
                     foreach (DESPL_ARRAY as $d) {
@@ -107,7 +109,6 @@
             ?>
         </div>
     </form>
-    <?php echo navbar("..", 1, 2, "./index.php", "./Ejercicio2.php"); ?>
 </body>
 
 </html>

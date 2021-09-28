@@ -3,6 +3,10 @@ define("USER_DB", "../data/usuarios.txt");
 
 function user_exists($url, $username)
 {
+    echo file_exists($url) ? ' file exists' : 'file does not exist', "\n";
+    echo is_readable($url) ? ' is readable' : ' is NOT readable', "\n";
+    echo is_writable($url) ? ' is writable' : ' is NOT writable', "\n";
+
     $file = fopen($url, "r");
     $line = "";
 
@@ -25,7 +29,9 @@ function user_exists($url, $username)
 
 function register_user($url, $username, $password)
 {
+    echo substr(decoct(fileperms($url)), 2);
     $file = fopen($url, "a");
+
     if ($file != false) {
         fwrite($file, $username . ";" . $password . "\n");
         fclose($file);
@@ -51,8 +57,7 @@ if ($user !== "") {
 
         if ($exists == true) {
             $exist_error = true;
-        }
-        else {
+        } else {
             $registered = register_user(USER_DB, trim($user), $password);
         }
     } else $password_error = true;
@@ -69,6 +74,11 @@ if ($user !== "") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 </head>
+<style>
+    <?php
+    include_once "../styles/styles.css";
+    ?>
+</style>
 
 <body>
     <h2>REGÍSTRATE</h2>

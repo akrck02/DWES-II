@@ -41,7 +41,7 @@ function substCifrate($text = "", $filename = "")
     if($filename == "")
         return $text;
 
-    $file = fopen($filename, "r");
+    $file = fopen($filename, "r+");
     $abc = fread($file, filesize($filename));
 
     fclose($file);
@@ -140,7 +140,7 @@ function addLineToFile($url = "./", ...$content)
         mkdir(dirname($url), 0777, true);
     }
 
-    $file = fopen($url, "a");
+    $file = fopen($url, "a+");
     if ($file != false) {
         foreach ($content as $line) {
             if(is_array($line))

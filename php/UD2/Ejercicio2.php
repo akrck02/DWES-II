@@ -20,6 +20,7 @@
 </style>
 
 <body>
+    <?php echo navbar(1,2,3,"./Ejercicio1.php","./Ejercicio3.php"); ?>
     <h1>Imagenes.com</h1>
     <form action="./views/evaluate.php" method="get">
         <label> Cuantas imágenes quieres ver?
@@ -40,7 +41,6 @@
         </label>
         <?php echo '<br><input type="submit" name="next" value="Siguiente">';?>
     </form>
-    <?php echo navbar(1,2,3,"./Ejercicio1.php","./Ejercicio3.php"); ?>
 </body>
 
 </html>
