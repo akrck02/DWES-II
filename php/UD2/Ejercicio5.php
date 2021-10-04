@@ -5,18 +5,19 @@ define("FACTOR", get_conversion());
 
 function get_conversion(){
     $file = fopen(DB, "r");
-    $factor = fgets($file);
-    fscanf($file, "%f", $euro);
+    $factor =  fscanf($file, "%f");
     fclose($file);
-    return $factor;
+
+    return isset($factor[0]) ? $factor[0] : false;
 }
 
 function euro_to_dolar($euro){
-    return $euro * FACTOR;
+
+    return FACTOR === false ? "No se ha encontrado el factor de conversión" : $euro * FACTOR;
 }
 
 function dolar_to_euro($dolar){
-    return $dolar / FACTOR;
+    return FACTOR === false ? "No se ha encontrado el factor de conversión" : $dolar / FACTOR;
 }
 
 $empty_error = false;
@@ -73,8 +74,7 @@ if ($convertir !== false) {
                 <?php 
                     if ($result !== false) 
                         echo '<td>' . $result . '</td>';
-                    
-                        echo $conversion;
+  
                 ?>
                 <td>
                     <label><input type="radio" name="conversion" <?php if($conversion == "eur-dol") echo "checked" ?>  value="eur-dol" id=""> Euros a dólares</label>
