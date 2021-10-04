@@ -1,0 +1,13 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+input[type=submit] {        
+    max-width: 105px;
+    align-self: flex-end;
+}

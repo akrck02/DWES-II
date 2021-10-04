@@ -161,5 +161,4 @@ $articles = get_items(DB);
         </table>
     </form>
 </body>
-
 </html>

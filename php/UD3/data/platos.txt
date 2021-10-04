@@ -1,0 +1,15 @@
+Macarrones 1 10.99
+Alubias 1 15.99
+Ensalada 1 7.65
+Empanadas 2 8.99
+Bistec 2 18.55
+Croquetas 2 13.95
+Huevos 2 13.95
+Tarta 3 6.55
+Brownie 3 4.55
+Helado 3 2.00
+Café 3 1.55
+Ron 4 9.99
+Vodka 4 10.99
+Kas 4 2.55
+Cerverza 4 2.55
