@@ -1,13 +1,6 @@
 <?php 
+    require_once "./libmenu.php";
     session_start();
-    define("CATEGORIES",
-    [
-        "FIRST" => 1,
-        "SECOND" => 2,
-        "DESSERT" => 3,
-        "DRINK" => 4,
-
-    ]);
 
     $_SESSION['menu'] = isset($_SESSION['menu']) ? $_SESSION['menu'] : [];
   
@@ -20,11 +13,10 @@
 
         if($category and $dish)
             $_SESSION['menu'][$category] = $dish;
-
     }  
 
 ?>
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 
 <head>
@@ -37,15 +29,15 @@
 <body>
     <div class="column">
         <h1>MENU DEL DIA</h1>
-        <a href="./pedidoPlato.php?category=<?php echo CATEGORIES['FIRST']?>">PRIMER PLATO</a>
-        <a href="./pedidoPlato.php?category=<?php echo CATEGORIES['SECOND']?>">SEGUNDO PLATO</a>
-        <a href="./pedidoPlato.php?category=<?php echo CATEGORIES['DESSERT']?>">POSTRE</a>
-        <a href="./pedidoPlato.php?category=<?php echo CATEGORIES['DRINK']?>">BEBIDA</a>
+        <a class="dish_category" href="./pedidoPlato.php?category=<?php echo CATEGORIES['FIRST']?>">PRIMER PLATO</a>
+        <a class="dish_category" href="./pedidoPlato.php?category=<?php echo CATEGORIES['SECOND']?>">SEGUNDO PLATO</a>
+        <a class="dish_category" href="./pedidoPlato.php?category=<?php echo CATEGORIES['DESSERT']?>">POSTRE</a>
+        <a class="dish_category" href="./pedidoPlato.php?category=<?php echo CATEGORIES['DRINK']?>">BEBIDA</a>
     </div>
 </body>
 <?php 
         if (count($_SESSION['menu']) > 0) {
-            echo "<h3>Menú:</h3>";
+            echo "<h2>Menú:</h2>";
 
             $primero = isset($_SESSION['menu'][CATEGORIES['FIRST']]) ? $_SESSION['menu'][CATEGORIES['FIRST']] : false;
             $segundo = isset($_SESSION['menu'][CATEGORIES['SECOND']]) ? $_SESSION['menu'][CATEGORIES['SECOND']] : false;
@@ -53,16 +45,19 @@
             $bebida = isset($_SESSION['menu'][CATEGORIES['DRINK']]) ? $_SESSION['menu'][CATEGORIES['DRINK']] : false;
 
             if($primero) 
-                echo "<p>Primer plato: $primero</p>";
+                echo "<p><b>Primer plato:</b> $primero</p>";
             if($segundo) 
-                echo "<p>Segundo plato: $segundo</p>";
+                echo "<p><b>Segundo plato:</b> $segundo</p>";
             if($postre)
-                echo "<p>Postre: $postre</p>";
+                echo "<p><b>Postre:</b> $postre</p>";
             if($bebida)
-                echo "<p>Bebida: $bebida</p>";
+                echo "<p><b>Bebida:</b> $bebida</p>";
 
-        } else 
-            echo "<p>No hay nada seleccionado.</p>";    
+            echo 
+            "<form action='./finpedido.php' method='post'>
+                <input type='submit' name='end' value='' id='end'>
+            </form>";
+        } else echo "<p>No hay nada seleccionado.</p>";    
     ?>
 
 </html>

@@ -1,4 +1,8 @@
-<?php session_start(); ?>
+<?php 
+    session_start(); 
+    $error = isset($_REQUEST['error'])  ? $_REQUEST['error'] : false;
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,15 +19,26 @@
         <div class="column">
             <label for="">
                 Usuario:
-                <input type="text" name="user">
+                <input type="text" name="user" value="<?php echo isset($_COOKIE['last_user']) ? $_COOKIE['last_user'] : "" ?>">
             </label>
             <label for="">
                 Contraseña:
                 <input type="password" name="password">
-            </label>
+            </label><br>
             <input type="submit" name="partner" value="Acceso socio">
         </div>
     </form>
+    <?php
+        echo "<br><hr><b>Sesión activa: </b>";
+        print_r($_SESSION);  
+
+        echo "<br><b>Cookies activas: </b>";
+        print_r($_COOKIE); 
+    ?>
+    <?php 
+        if($error)
+            echo "<p class='error'>$error</p>";
+    ?>
     <hr>
 
     <h3>Acceso sin registro:</h3>

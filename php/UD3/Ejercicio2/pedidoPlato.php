@@ -1,29 +1,10 @@
 <?php  
+    require_once "./libmenu.php";
     session_start();
-    define("CATEGORIES",
-    [
-        "FIRST" => 1,
-        "SECOND" => 2,
-        "DESSERT" => 3,
-        "DRINK" => 4,
 
-    ]);
-  
-   function get_dishes($category){
-        $dishes = [];
-        $file = fopen("../data/platos.txt", "r");
-        
-        while(!feof($file)){
-            $line = fgets($file);
-            $dish = explode(" ", $line);
-            if($dish[1] == $category)
-                $dishes[] = $dish;
-        }
-        
-        fclose($file);
-        return $dishes;
-    }
-
+    /**
+     * Get category name
+     */
     function get_category($category = ""){
         switch ($category) {
             case CATEGORIES['FIRST']:
@@ -56,13 +37,12 @@
 </head>
 <style><?php include_once "../styles/Ejercicio2.css";?></style>
 <body>
-    <p>Elija un <?php echo get_category($category) ?></p>
+    <h2>Elija un <?php echo get_category($category) ?></h2>
     <form action="./pedido.php" method="post">
         <select name="dish">
             <?php
-                foreach ($dishes as $dish) {
-                    echo "<option value='$dish[0]'>$dish[0]</option>";
-                }
+                foreach ($dishes as $dish) 
+                    echo "<option value='$dish[0]'>$dish[0] - ".floatval($dish[2])."€</option>";
             ?>
         </select>
         <input type="hidden" name="category" value="<?php echo $category?>">
