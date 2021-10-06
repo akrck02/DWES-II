@@ -19,7 +19,6 @@
         }
     }
 
-    $categoria = isset($_POST['categoria']);
     $category = isset($_REQUEST['category']) ? $_REQUEST['category'] : false;
 
     if($category)

@@ -24,7 +24,9 @@
 
     $discount =  isset($_SESSION['discount']) ? $_SESSION['discount'] : 0;
     $total =  $first_total + $second_total + $dessert_total + $drink_total;
-    $total *= $discount / floatval(100);
+    
+    if($discount != 0)
+        $total *= $discount / floatval(100);
 ?>
 <!DOCTYPE html>
 <html lang="en">
