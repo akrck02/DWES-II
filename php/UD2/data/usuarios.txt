@@ -3,3 +3,5 @@ cesar;pog
 cesars;asd
 aketza;0810
 iraibi;iraibi2012
+javi;0810
+puta;ok

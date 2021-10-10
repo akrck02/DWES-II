@@ -3,7 +3,7 @@ body {
 }
 
 input[type=submit] {        
-    max-width: 200px;
+    max-width: 250px;
     background: #f1f1f1;
     border-radius: 3px;
     border: none;

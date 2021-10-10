@@ -39,8 +39,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
 </head>
+<style>
+    body {
+        position: absolute;
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        width:100%;
+        height:100%;
+    }
+
+    iframe {
+        position: relative;
+        border:none;
+        width:100%;
+        height:calc(100% - 140px);
+    }
+
+    form{
+        display: block;
+    }
+
+    table {
+        box-shadow: 0px -1px 4px rgba(0,0,0,.15);
+        width:100%;
+        padding:10px;
+        height:80px;
+    }
+
+    input[type=text]{
+        padding:7px;
+        border-radius: 100px;
+        border:2px solid #f1f1f1;
+        background:#f1f1f1;
+        max-width: 400px;
+        width:100%;
+    }
+
+    input[type=submit]{
+        background: dodgerblue;
+        padding: 10px;
+        color: white;
+        border: none;
+        border-radius: 60px;
+        box-shadow: 0px 2px 4px rgba(0,0,0,.15);
+        transform: scale(1.2);
+        cursor: pointer;
+    }
+
+    header {
+        position: relative;
+        height: 20px;
+        padding: 10px;
+        font-weight: bold;
+        background: #fafafa;
+        box-shadow: 0px 2px 4px rgba(0,0,0,.15);
+        z-index: 9;
+    }
+</style>
 <body>
-    <iframe style='width:90%; height:500px;'src="./contenido_charla.php"></iframe>
+    <header>CHARLAPP</header>
+    <iframe src="./contenido_charla.php"></iframe>
+    <div>
     <form action="" method="post">
         <table>
             <tr>
@@ -50,11 +109,10 @@
             <tr>
                 <td>Mensaje: </td>
                 <td><input type="text" name="message" id=""></td>
-            </tr>
-            <tr>
                 <td><input type="submit" value="Enviar" name="send"></td>
             </tr>
         </table>
     </form>
+    </div>
 </body>
 </html>

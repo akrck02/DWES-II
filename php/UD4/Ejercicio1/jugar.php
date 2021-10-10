@@ -1,61 +1,133 @@
-<?php  
-    session_start();
-    define("PREGUNTAS", [
-        "CIENCIA" => [
-            "Formula química del agua" => ["H2O","O2","CO2"],
-            "Sistema númerico usado en informática" => ["binario","hexadecimal","octal"],
-            "2 * 4" => ["8","16","32"]
-        ],
-        "LITERATURA" => [
-            "¿Era lorca andaluz?" => ["si","no"],
-            "Novela prima de Bocaccio" => ["El decameron","El quijote"],
-            "¿Quien escribió la casa de los espiritus?" => ["Isabel Allende","Quevedo","Perez reverte"],
-        ],
-        "CINE" => [
-            "Primera pelicula de Harry Potter" => ["La piedra filosofal","La orden del fenix"],
-            "Pelicula de JRR tolkien" => ["El señor de los anillos","Piratas del caribe"],
-            "¿Es titanic de miedo?" => ["Si","No"]
-        ],
-        "VIDEOJUEGOS" => [
-            "Género de Hollow knight" => ["Metroidvania","Shooter","Dating sim"],
-            "Madeline de celeste es" => ["Chico","Chica"],
-            "Pokemons de la primera entrega" => ["151","150","205"],
-            "Pokemon n1 en la pokedex" => ["Bulbasaur","Charmander","Squirtle"],
-            "Lenguaje de programación de Minecraft" => ["Java","Rust","Python"],
-        ],
-        "OTRAS" => [
-            "Numero de ruedas de una bici" => ["2","4","6"],
-            "Año de descubrimiento de américa" => ["1492","1613","1107"],
-            "1GB en megabytes" => ["1000","1024","700"],
-            "Canción de navidad" => ["All I want for christmas","Aserejé","September"],
-            "Velocidad máxima en autopista" => ["120km/h","100km/h","75km/h"],
-            "Año de inicio de la guerra civil española" => ["1936","1945","1812"],
-            "Escritor del manifiesto comunista" => ["Karl marx y Engels", "Ortega y Gasset", "Juan"],
-            "Caballo del meme del balcón" => ["Juan","Manolo","Patricia"],
-            "Green capital" => ["Vitoria", "Donosti", "Shangai"],
-            "Cadena de hamburguesas" => ["Macdonals","Cesar's Colliseum","Alejandro the great"],
-            "Numero de núcles del ryzen 3700x" => ["8","6","4"],
-            "Mac mas pequeño" => ["Mac mini", "Macbook air", "IMac pro"],
-            "Compañia dueña de Whatsapp" => ["Facebook","Google","Amazon"],
-            "Numero de subscriptores de SrtaWolfy" => ["50","40"],
-            "Año de salida de windows 11" => ["2021","No existe", "1993"]
-        ]
-    ]);
+<?php
+require_once "./constants.php";
+define("ERROR_FILE", "../data/errors.txt");
+session_start();
 
-    $_SESSION['preguntas'] = PREGUNTAS;
+function add_line_to_file($url, $content)
+{
 
-    print_r($_SESSION);
+    if (!is_dir(dirname($url))) {
+        mkdir(dirname($url), 0777, true);
+    }
+
+    $file = fopen($url, "a+");
+    if ($file != false) {
+        fwrite($file, $content . " ");
+        fwrite($file, "\n");
+        fclose($file);
+        return true;
+    } else return false;
+
+    return true;
+}
+
+
+// Checking possible inputs
+$_SESSION['QUESTIONS'] = QUESTIONS;
+$categories = isset($_SESSION['categories']) ? $_SESSION['categories'] : [];
+$check = isset($_POST['check']) ? $_POST['check'] : false;
+
+if ($check) {
+    $needle = "ENVIAR RESPUESTA";
+    $category = trim(substr($check, strrpos($check, $needle) + strlen($needle)));
+    $question = isset($_POST['question_' . $category]) ? $_POST['question_' . $category] : false;
+    $response = isset($_POST['response_' . $category]) ? $_POST['response_' . $category] : false;
+    $valid_response = QUESTIONS[$category][$question][1];
+    $save = $categories[$category]['save_errors'];
+
+    if($question !== false and $response !== false){
+        if ($response == $valid_response) {
+            $categories[$category]['success']++;
+            //print_r($categories[$category]);
+        } else {
+            if ($save) {
+                $question_predicate = QUESTIONS[$category][$question][0];
+                add_line_to_file(ERROR_FILE, $question_predicate . " => ERROR: " . $response);
+            }
+        }
+        $categories[$category]['question_index']++;
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<style>
+    <?php include_once "../styles/Ejercicio1.css"; ?>th,
+    td {
+        padding: 10px;
+    }
+</style>
+
 <body>
-    
+    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+        <table>
+            <?php
+            $unfinished = 0;
+
+            echo "  
+            <tr>
+                <th>TIPO</th>
+                <th>Nº PREGUNTA</th>
+                <th>PREGUNTA</th>
+                <th>RESPUESTAS</th>
+                <th></th>
+            <th></th>
+            </tr>
+            ";
+
+            foreach ($categories as $category => $data) {
+                $possible_questions = QUESTIONS[$category];
+                $max = count($possible_questions) - 1 < $data['question_index'] ? count($possible_questions) - 1 : $data['question_index'];
+
+                if (!isset($data['answers'])) {
+                    shuffle($possible_questions);
+                    $categories[$category]['answers'] = $possible_questions;
+                }
+
+                $question_index = $max;
+                if ($data['question_index'] <= $question_index) {
+                    $current_question = $possible_questions[$question_index];
+                    $question = $current_question[0];
+                    $valid_response = $current_question[1];
+
+                    $current_question = array_slice($current_question, 1);
+                    shuffle($current_question);
+
+                    echo "<tr>";
+                    echo "<td>$category<input type='hidden' name='question_$category' value='$question_index'></td>";
+                    echo "<td>" . ($question_index + 1) . "</td>";
+                    echo "<td>" . $question . "</td>";
+                    echo "<td>";
+                    foreach ($current_question as $response) {
+                        echo "<label><input type='radio' value='$response' name='response_$category'>$response</label><br>";
+                    }
+                    echo "</td>";
+                    echo "<td><input type='submit' name='check' value='ENVIAR RESPUESTA $category'></td>";
+                    echo "<td><p>" . $data['success'] . " Aciertos</p></td>";
+
+                    echo "</tr>";
+                    $unfinished++;
+                }
+            }
+            $_SESSION['categories'] = $categories;
+            ?>
+        </table>
+    </form>
+    <?php 
+        if ($unfinished == 0) {
+
+            echo "<h1>Enhorabuena, has terminado el juego!!!</h1>";
+            echo "<a href='".ERROR_FILE."'>Ver tus fallos</a>";
+        }
+    ?>
 </body>
 </html>
