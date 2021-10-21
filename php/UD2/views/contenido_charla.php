@@ -90,7 +90,7 @@
         width: 5px;
     }
     
-    ::-webkit-scrollbar-thumb {
+    ::-webkit-scrollbar-thumb { 
         background: dodgerblue; 
         border-radius: 10px;
     }
