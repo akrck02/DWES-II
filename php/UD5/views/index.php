@@ -19,10 +19,14 @@
 
  <?php 
     foreach ($items as $item) {
-
-
         $image = getImageFromItem($conn, $item['id']);
         $date = $date = new DateTime($item['fechafin']);
+        $bids = getItemsBids($conn,$item['id']);
+        $bidCount = count($bids);
+        $price = $item['precio_partida'];
+
+        if($bidCount > 0) 
+            $price = $bids[0]['cantidad'];
 
         echo "<tr>"; 
             if($image)      
@@ -31,12 +35,12 @@
                 echo "<td> <p class='no-image'>NO IMAGEN</p></td>";
 
             echo "<td>".$item['nombre']."</td>";
-            echo "<td></td>";
-            echo "<td>".$item['precio_partida'].CURRENCY."</td>";
-            echo "<td>".$date->format('d/m/Y h:i')."</td>";
+            echo "<td>$bidCount</td>";
+            echo "<td>$price".CURRENCY."</td>";
+            echo "<td>".$date->format('d/m/Y h:iA')."</td>";
         echo "</tr>";
     }   
-   // print_r($items);
+
  ?>
 </table>
 <?php require_once "./footer.php" ?>

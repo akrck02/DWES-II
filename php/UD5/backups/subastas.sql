@@ -84,15 +84,16 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `activo` tinyint(4) NOT NULL,
   `falso` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 INSERT INTO `usuario` (`id`, `username`, `nombre`, `password`, `email`, `cadenaverificacion`, `activo`, `falso`) VALUES
-(1, 'admin', 'Aketza Egusquiza Vázquez', '0810', 'aketza.vazquez@gmail.com', '123456', 1, 1),
-(2, 'juan', 'Juan Carlos María', 'wireless', 'juanwireless@protonmail.com', 'alskdjal98123masd', 1, 1),
-(3, 'patriChikita99', 'Patricia Bastida', 'pokemon', 'patriChikita@pokemonmail.com', '136x0843we', 1, 1),
-(4, 'cesferortYT', 'Cesar Ferreiro', 'cesfe2021', 'cesferortyoutube@gmail.com', '102984m1267', 1, 1),
-(5, 'martaBasada97', 'Marta', 'javascript', 'marta.basada@gmail.com', '123jkjhfc123fh12', 1, 1),
-(6, 'akrck02', 'Ake', '1234', 'akrck02@gmail.com', 'dhfsjksjkdh238', 0, 0);
+(1, 'admin', 'Aketza Egusquiza Vázquez', '113180fa10fcf7a118ecdbcd21c4cd24', 'aketza.vazquez@gmail.com', '123456', 1, 1),
+(2, 'juan', 'Juan Carlos María', '81dc9bdb52d04dc20036dbd8313ed055', 'juanwireless@protonmail.com', 'alskdjal98123masd', 1, 1),
+(3, 'patriChikita99', 'Patricia Bastida', '81dc9bdb52d04dc20036dbd8313ed055', 'patriChikita@pokemonmail.com', '136x0843we', 1, 1),
+(4, 'cesferortYT', 'Cesar Ferreiro', '81dc9bdb52d04dc20036dbd8313ed055', 'cesferortyoutube@gmail.com', '102984m1267', 1, 1),
+(5, 'martaBasada97', 'Marta', '81dc9bdb52d04dc20036dbd8313ed055', 'marta.basada@gmail.com', '123jkjhfc123fh12', 1, 1),
+(6, 'akrck02', 'Ake', '81dc9bdb52d04dc20036dbd8313ed055', 'akrck02@gmail.com', 'dhfsjksjkdh238', 0, 0),
+(21, 'pepe37', 'Juan carlos', 'f1534cd6b03bca4163d5773a988dc3bc', 'juanc@protonmail.com', 'jAWgtIfuG`mMaqMj', 0, 0);
 
 
 ALTER TABLE `imagen`

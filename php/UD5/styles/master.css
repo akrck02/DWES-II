@@ -94,6 +94,49 @@ th {
 
 td {
     padding: 10px;
+    text-align: center;
+}
+
+table.register td {
+    text-align: left;
+}
+
+label {
+    cursor: pointer;
+    transition: .25s;
+}
+
+label:hover{
+    color: dodgerblue;
+    user-select: none;
+}
+
+input[type='text'], input[type='password']{
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid #202020;
+    transition: .25s;
+}
+
+input[type='submit']{
+    cursor: pointer;
+    padding: 10px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 3px;
+    box-shadow: 0px 2px 4px rgba(0,0,0,.15);
+    transition: .25s;
+}
+
+input[type='submit']:hover {
+    box-shadow: 0px 2px 4px rgba(0,0,0,.05);
+}
+
+input[type='text']:focus, input[type='password']:focus {
+    outline: none;
+    border-bottom: 1px solid dodgerblue;
 }
 
 #main table td:nth-child(1) {

@@ -3,7 +3,7 @@
     echo "<ul>"; 
     if($conn) {
         $categories = getCategories($conn);
-        $categoryIndex = isset($categoryIndex) ? $categoryIndex : "all"; 
+        $categoryIndex = isset($categoryIndex) ? $categoryIndex : ""; 
 
         if(count($categories))
             echo "<li><a ".($categoryIndex == "all" ? "class='selected'": "")." href='?category=all'>Ver todas</a></li>";
