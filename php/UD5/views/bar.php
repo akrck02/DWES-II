@@ -6,12 +6,12 @@
         $categoryIndex = isset($categoryIndex) ? $categoryIndex : ""; 
 
         if(count($categories))
-            echo "<li><a ".($categoryIndex == "all" ? "class='selected'": "")." href='?category=all'>Ver todas</a></li>";
+            echo "<li><a ".($categoryIndex == "all" ? "class='selected'": "")." href='" . BASE_ROUTE . "/views/index.php?category=all'>Ver todas</a></li>";
 
         foreach ($categories as $category) {
             $class = ($category['id'] == $categoryIndex) ? "class='selected'" : "" ;
 
-            echo "<li><a ".$class." href='?category=".$category['id']."'>".$category['categoria']."</a></li>";
+            echo "<li><a ".$class." href='" . BASE_ROUTE . "/views/index.php?category=".$category['id']."'>".$category['categoria']."</a></li>";
         }
 
     }

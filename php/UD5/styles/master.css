@@ -1,14 +1,35 @@
+
+:root {
+    --font : 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --smooth-shadow : 0px 2px 4px rgba(0,0,0,.15);
+    --lite-shadow:  0px 2px 4px rgba(0,0,0,.05);
+
+    --error-color : #fa2000;
+    --accent-color : dodgerblue;
+    
+    --white :  #fff;
+    --black : #000;
+    --elegant-black : #202020;
+    --shutdown-black : #404040;
+    --lightgray : #f1f1f1;
+}
+
+
+.error { 
+    color: var(--error-color);
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font);
     margin: 0;
 }
 
 #header {
-    background-color: rgb(0,0,0);
+    background-color: var(--black);
     padding: 15px;
     height: 50px;
     text-align: center;
-    color: rgb(255,255,255);
+    color: var(--white);
 }
 
 #header h1 {
@@ -19,19 +40,16 @@ body {
    height: 45px;
    display: flex; 
    justify-content: center;
-   background: #f1f1f1;
+   background: var(--lightgray);
 } 
 
 #menu a{
     padding: 10px;
-    text-decoration: none;
-    color: #202020;
-    transition: .25s;
 }
 
-#bar a {
+a {
     text-decoration: none;
-    color: #202020;
+    color: var(--elegant-black);
     transition: .25s;
 }
 
@@ -44,7 +62,7 @@ body {
 }
 
 #bar a:hover , #bar a.selected{
-    color: dodgerblue;
+    color: var(--accent-color);
 }
 
 #container {
@@ -54,7 +72,7 @@ body {
 
 #bar {
     padding: 15px;
-    background: #f1f1f1;
+    background: var(--lightgray);
     max-width: 270px;
     width: 30%;
 }
@@ -78,9 +96,9 @@ body {
     width: 150px;
     height: 150px;
     border-radius: 5px;
-    filter: drop-shadow( 0px 2px 4px rgba(0,0,0,.15));
+    filter: drop-shadow(var(--smooth-shadow));
     object-fit: cover;
-    background: #f1f1f1;
+    background: var(--lightgray);
 }
 
 table{
@@ -88,7 +106,7 @@ table{
 }
 
 th {
-    background: #f1f1f1;
+    background: var(--lightgray);
     padding: 10px;
 }
 
@@ -97,7 +115,7 @@ td {
     text-align: center;
 }
 
-table.register td {
+table.register td, table.login td {
     text-align: left;
 }
 
@@ -107,18 +125,28 @@ label {
 }
 
 label:hover{
-    color: dodgerblue;
+    color: var(--accent-color);
     user-select: none;
 }
 
-input[type='text'], input[type='password']{
+input[type='text'], input[type='password'] , input[type='number']{
     padding: 10px;
     margin: 5px 0;
     box-sizing: border-box;
     border: none;
-    border-bottom: 1px solid #202020;
+    border-bottom: 1px solid var(--elegant-black);
     transition: .25s;
 }
+
+input[type='text'].error, input[type='password'].error, input[type='number'].error{
+    color: var(--black);
+    border-bottom: 1px solid var(--error-color);
+}
+
+input[type='text'].error:focus, input[type='password']:focus.error, input[type='number']:focus.error{
+    border-bottom: 1px solid var(var(--error-color));
+}
+
 
 input[type='submit']{
     cursor: pointer;
@@ -126,51 +154,51 @@ input[type='submit']{
     box-sizing: border-box;
     border: none;
     border-radius: 3px;
-    box-shadow: 0px 2px 4px rgba(0,0,0,.15);
+    box-shadow: var(--smooth-shadow);
     transition: .25s;
 }
 
 input[type='submit']:hover {
-    box-shadow: 0px 2px 4px rgba(0,0,0,.05);
+    box-shadow: var(--lite-shadow);
 }
 
 input[type='text']:focus, input[type='password']:focus {
     outline: none;
-    border-bottom: 1px solid dodgerblue;
+    border-bottom: 1px solid var(--accent-color);
 }
 
-#main table td:nth-child(1) {
+/** Table default settings **/
+#main table.items td:nth-child(1) {
     width: 7%;
     max-width: 160px;
 }
 
-#main table td:nth-child(2) {
+#main table.items td:nth-child(2) {
     width: 30%;
 }
 
-#main table td:nth-child(3) {
+#main table.items td:nth-child(3) {
     width: 10%;
 }
 
-#main table td:nth-child(4) {
+#main table.items td:nth-child(4) {
     width: 10%;
     max-width: 50px;
 }
 
-#main table td:nth-child(5) {
+#main table.items td:nth-child(5) {
     width: 15%;
     max-width: 150px;
 }
 
-
-#main table td p.no-image {
+#main table.items td p.no-image {
     margin: 10px;
     width: 150px;
     height: 150px;
 
     border-radius: 5px;
-    background: #f1f1f1;
-    color: #404040;
+    background: var(--lightgray);
+    color: var(--shutdown-black);
 
     font-weight: bold;
 
@@ -178,4 +206,51 @@ input[type='text']:focus, input[type='password']:focus {
     justify-content: center;
     align-items: center;
 
+}
+
+/** Login table **/
+#main table.login {
+    width:300px;
+}
+
+#main table.login td:nth-child(1) {
+    width: 5%;
+    max-width: 20px;
+}
+
+#main table.login td:nth-child(2) {
+    width: 5%;
+    max-width: 50px;
+}
+
+#main table.login td:nth-child(3) {
+    width: 5%;
+}
+
+#main table.login td:nth-child(2) input[type=submit] {
+    width:100px;
+}
+
+/** item details **/
+div.item-details img {
+    width:150px; 
+    height:150px; 
+    object-fit:cover;
+    border-radius: 10px;
+    background: var(--lightgray);
+    box-shadow: var(--smooth-shadow);
+    margin:10px;
+}
+
+div.item-details p.mininfo {
+    padding: 0px 10px;
+}
+
+div.item-details p {
+    padding: 0px 10px;
+}
+
+/** New bid **/
+table.new-bid{
+    width:200px;
 }

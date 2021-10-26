@@ -14,7 +14,7 @@
         <div id="header"> <h1>SUBASTAS CIUDAD JARDIN</h1> </div>
         <div id="menu">
             <a href="index.php">Home</a>
-            <?php echo (isset($_SESSION['USERNAME'])) ? "<a href='logout.php'>Logout</a>" : "<a href='login.php'>Login</a>"; ?>
+            <?php echo (isset($_SESSION['user'])) ? "<a href='logout.php'>Logout</a>" : "<a href='login.php'>Login</a>"; ?>
             <a href="newitem.php">New Item</a>
        </div>
        <div id="container">
