@@ -131,6 +131,63 @@ function getItem($conn, $id)
 }
 
 /**
+ * Get item by properties
+ */
+function getItemByProperties($conn,$category,$user,$name,$description,$date){
+    $sql = "SELECT * FROM item WHERE id_cat=? AND id_user=? AND nombre=? AND descripcion=? AND fechafin=?";
+
+    $statement = $conn->prepare($sql); 
+    $prepared = $statement->bind_param("iisss", $category, $user, $name, $description, $date);
+    $executed = $statement->execute();
+
+    if ($prepared and $executed) {
+
+        $result = $statement->get_result();
+    
+        if ($result->num_rows > 0) {
+
+            $result = $result->fetch_assoc();
+            if (!$result) {
+                $statement->close();
+                return false;
+            }
+            $item = $result;
+
+            return $item;
+        }
+    }
+
+    $statement->close();
+    return false;
+}
+
+/**
+ * Get user items
+ */
+function getUserItems($conn, $user){
+
+}
+
+
+/** 
+ * Insrt intem in the database
+ **/
+function newitem($conn,$category,$user,$name,$price,$description,$date)
+{
+    $sql = "INSERT INTO item(id_cat,id_user,nombre,precio_partida,descripcion,fechafin) VALUES(?,?,?,?,?,?)";
+   
+
+    $statement = $conn->prepare($sql);
+    echo mysqli_error($conn);
+    $prepared = $statement->bind_param("iisdss", $category, $user, $name, $price, $description, $date);
+    $executed = $statement->execute();
+    $statement->close();
+
+
+    return $prepared and $executed;
+}
+
+/**
  * Get items bid
  */
 function getItemsBids($conn, $item)
@@ -159,6 +216,7 @@ function getItemsBids($conn, $item)
  */
 function newBid($conn, $item, $user, $quantity)
 {
+    echo $quantity;
 
     $date = date("Y-m-d");
     $max = count(getDayUserBids($conn,$item,$user,$date)) >= 3;
@@ -167,10 +225,9 @@ function newBid($conn, $item, $user, $quantity)
         return false;
 
     $sql = "INSERT INTO puja(id_item,id_user,cantidad,fecha) VALUES(?,?,?,?)";
-   
 
     $statement = $conn->prepare($sql);
-    $prepared = $statement->bind_param("ssis", $item, $user, intval($quantity), $date);
+    $prepared = $statement->bind_param("ssds", $item, $user, floatval($quantity), $date);
     $executed = $statement->execute();
     $statement->close();
     
@@ -179,6 +236,9 @@ function newBid($conn, $item, $user, $quantity)
     return ($prepared and $executed);
 }
 
+/**
+ * Get the user bids of the day
+ */
 function getDayUserBids($conn, $item, $user, $date)
 {
     $bids = [];
@@ -199,6 +259,9 @@ function getDayUserBids($conn, $item, $user, $date)
     return $bids;
 }
 
+/**
+ * Generate a verification string
+ */
 function generateVerificationString()
 {
     $max = 16;

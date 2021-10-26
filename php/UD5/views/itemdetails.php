@@ -67,7 +67,7 @@
         <form action="<?php echo $_SERVER['PHP_SELF']?>" method="POST">
             <table class='new-bid'>
                 <tr>
-                    <td><input type='number' name='quantity'></td>
+                    <td><input type='number' name='quantity' step="0.01" min="0"></td>
                     <td><input type='submit' name='bid' value='Puja'></td>
                 </tr>
             </table>

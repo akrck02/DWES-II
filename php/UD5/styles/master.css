@@ -57,6 +57,10 @@ a {
     transform: translateY(-3%);
 }
 
+#menu a.selected {
+    font-weight: bold;
+}
+
 #bar li{
     height: auto;
 }
@@ -147,6 +151,23 @@ input[type='text'].error:focus, input[type='password']:focus.error, input[type='
     border-bottom: 1px solid var(var(--error-color));
 }
 
+textarea {
+    border: 1px solid var(--elegant-black);
+    resize: none;
+    width:100%;
+    padding : 10px;
+}
+
+select {
+    border:none;
+    padding:5px;
+    border-bottom: 1px solid var(--elegant-black);
+    transition: .25s;
+}
+
+option {
+   background: var(--lightgray);
+}
 
 input[type='submit']{
     cursor: pointer;
@@ -162,9 +183,14 @@ input[type='submit']:hover {
     box-shadow: var(--lite-shadow);
 }
 
-input[type='text']:focus, input[type='password']:focus {
+input[type='text']:focus, input[type='password']:focus , input[type='number']:focus {
     outline: none;
     border-bottom: 1px solid var(--accent-color);
+}
+
+textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent-color);
 }
 
 /** Table default settings **/
@@ -253,4 +279,21 @@ div.item-details p {
 /** New bid **/
 table.new-bid{
     width:200px;
+}
+
+/** New item **/
+div.new-item table {
+    max-width:700px;
+}
+
+div.new-item table td {
+    text-align: start;
+}
+
+div.new-item table td table td{
+    text-align: center;
+}
+
+div.new-item table td table td select{
+    width:100%;
 }
