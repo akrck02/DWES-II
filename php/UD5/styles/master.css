@@ -53,6 +53,10 @@ a {
     transition: .25s;
 }
 
+a:hover{
+    color: var(--accent-color);
+}
+
 #menu a:hover {
     transform: translateY(-3%);
 }
@@ -295,5 +299,47 @@ div.new-item table td table td{
 }
 
 div.new-item table td table td select{
+    width:100%;
+}
+
+div.edit-item table td {
+    text-align: start;
+}
+
+div.edit-item table.item-info td input {
+    margin: 2.5px;
+}
+
+div.edit-item img {
+    width:150px; 
+    height:150px; 
+    object-fit:cover;
+    border-radius: 10px;
+    background: var(--lightgray);
+    box-shadow: var(--smooth-shadow);
+    margin:10px;
+    transition: .25s;
+    filter: drop-shadow(var(--smooth-shadow)) grayscale(40%) !important;
+}
+
+div.edit-item tr:hover img {
+   transform: scale(1.05);
+   filter: drop-shadow(var(--smooth-shadow)) grayscale(0%) !important;
+}
+
+div.edit-item table.item-images{
+    max-width: 200px;
+}
+
+div.overdue table{
+    max-width: 800px;
+}
+
+div.overdue table td{
+    max-width: 200px;
+    text-align: start;
+}
+
+div.overdue input[type='submit']#delete {
     width:100%;
 }

@@ -64,6 +64,98 @@ function getItemsFromCategory($conn, $category)
 }
 
 /**
+ * Get expired items
+ */
+function  getExpiredItems($conn){
+    $items = [];
+    $sql = "select * from item where TIMESTAMPDIFF(SECOND, fechafin, now()) > 1";
+    
+    $statement = $conn->prepare($sql);
+    echo mysqli_error($conn);
+    $prepared = true;
+    $executed = $statement->execute();
+
+    if ($prepared and $executed) {
+
+        $result = $statement->get_result();
+        while ($item = $result->fetch_assoc()) {
+            $items[] = $item;
+        }
+    }
+
+    $statement->close();
+    return $items;
+}
+
+/**
+ * Remove an item
+ */
+function removeItem($conn,$item){
+    $sql = "DELETE FROM item WHERE id=?";
+    $sql2 = "DELETE FROM imagen WHERE id_item=?";
+    $sql3 = "DELETE FROM puja WHERE id_item=?";
+   
+    $statement = $conn->prepare($sql);
+    $prepared = $statement->bind_param("i", intval($item));
+    $executed = $statement->execute();
+
+    $statement = $conn->prepare($sql2);
+    $prepared = $statement->bind_param("i", intval($item));
+    $executed = $statement->execute();
+
+    $statement = $conn->prepare($sql3);
+    $prepared = $statement->bind_param("i", intval($item));
+    $executed = $statement->execute();
+
+    return $prepared and $executed;
+}
+
+
+/**
+ * Update item
+ */
+function updateItem($conn,$id,$price,$date){
+    $sql = "UPDATE item SET precio_partida=?, fechafin=? WHERE id=?";
+   
+    $statement = $conn->prepare($sql);
+    $prepared = $statement->bind_param("dsi", floatval($price),$date,intval($id));
+    $executed = $statement->execute();
+
+    return $prepared and $executed;
+}
+
+
+/** 
+ * Insert image in the database
+ **/
+function newImage($conn,$item,$image)
+{
+    $sql = "INSERT INTO imagen(id_item,imagen) VALUES(?,?)";
+
+    $statement = $conn->prepare($sql);
+    echo mysqli_error($conn);
+    $prepared = $statement->bind_param("is", intval($item), $image);
+    $executed = $statement->execute();
+    $statement->close();
+
+
+    return $prepared and $executed;
+}
+
+/**
+ * Remove image
+ */
+function removeImage($conn, $image){
+    $sql = "DELETE FROM imagen WHERE id=?";
+   
+    $statement = $conn->prepare($sql);
+    $prepared = $statement->bind_param("i", intval($image));
+    $executed = $statement->execute();
+
+    return $prepared and $executed;
+}
+
+/**
  * Get an image for the item
  */
 function getImageFromItem($conn, $item)
@@ -93,7 +185,7 @@ function getImagesFromItem($conn, $item)
 
         $result = $statement->get_result();
         while ($image = $result->fetch_assoc())
-            $images[] = $image['imagen'];
+            $images[] = $image;
     }
 
     $statement->close();
@@ -136,7 +228,7 @@ function getItem($conn, $id)
 function getItemByProperties($conn,$category,$user,$name,$description,$date){
     $sql = "SELECT * FROM item WHERE id_cat=? AND id_user=? AND nombre=? AND descripcion=? AND fechafin=?";
 
-    $statement = $conn->prepare($sql); 
+    $statement = $conn->prepare($sql);
     $prepared = $statement->bind_param("iisss", $category, $user, $name, $description, $date);
     $executed = $statement->execute();
 
@@ -164,13 +256,27 @@ function getItemByProperties($conn,$category,$user,$name,$description,$date){
 /**
  * Get user items
  */
-function getUserItems($conn, $user){
+function isItemOwner($conn, $user, $item){
+    $sql = "SELECT * FROM item WHERE id_user=? AND id=?";
+   
+    $statement = $conn->prepare($sql);
+    $prepared = $statement->bind_param("ii", intval($user), intval($item));
+    $executed = $statement->execute();
+
+    $owner = false;
+
+    if ($prepared and $executed) {
+        $owner = $statement->get_result()->num_rows > 0;
+    }
+
+    $statement->close();
+    return $owner;
 
 }
 
 
 /** 
- * Insrt intem in the database
+ * Insert intem in the database
  **/
 function newitem($conn,$category,$user,$name,$price,$description,$date)
 {

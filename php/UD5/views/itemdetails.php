@@ -57,7 +57,7 @@
 
         # Display the item images
         foreach ($images as $image)
-            echo "<img src='".IMAGES_ROUTE.$image."'>"
+            echo "<img src='".IMAGES_ROUTE.$image['imagen']."'>"
     ?>
     <p><?php echo $item['descripcion']?></p>
 

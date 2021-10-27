@@ -32,17 +32,17 @@
 
         echo "<tr>"; 
             if($image)      
-                echo "<td><img src='".IMAGES_ROUTE.$image."'></td>";
+                echo "<td><img src='".IMAGES_ROUTE.$image['imagen']."'></td>";
             else
                 echo "<td> <p class='no-image'>NO IMAGEN</p></td>";
 
             echo "<td>";
             echo "<a href='itemdetails.php?item=$id'>".$item['nombre']."</a>"; 
 
-            $owner = false;
+            $owner = isset($_SESSION['userId']) ?  isItemOwner($conn,$_SESSION['userId'],$id) : false;
 
             if($owner)
-               echo "&nbsp;<b><a href='edititems.php?item=$id'>[Editar]</a></b>"; 
+               echo "&nbsp;<b><a href='edititem.php?item=$id'>[Editar]</a></b>"; 
 
             echo "</td>";
 
