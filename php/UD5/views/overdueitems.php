@@ -27,8 +27,10 @@
         
             foreach ($items as $item) {
 
-                $bid = getItemsBids($conn,$item['id'])[0];
-                $winner = getUsername($conn,$bid['id_user']);
+                $bid = getItemsBids($conn,$item['id']);
+                $bid = isset($bid[0]) ? $bid[0] : false;
+                $winner = $bid ? getUsername($conn,$bid['id_user']) : "-";
+                $quantity = $bid ? $bid['cantidad'] : $item['precio_partida'];
 
                 echo "<tr>";    
                 echo "<td><input type='checkbox' name='selected[]' value='".$item['id']."'></td>";
@@ -38,7 +40,7 @@
                     echo "<p style='color:var(--shutdown-black)'>".$item['descripcion']."</p>";
                 echo "</td>";
 
-                echo "<td>".$bid['cantidad'].CURRENCY."</td>";                
+                echo "<td>".$quantity.CURRENCY."</td>";                
                 echo "<td>".$winner."</td>";                
                 echo "</tr>";
             }
