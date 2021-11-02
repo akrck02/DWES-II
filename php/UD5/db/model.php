@@ -526,7 +526,7 @@ function generateVerificationString()
  * @param string $password  The password
  * @param string $name      The user full name
  * @param string $email     The user email
- * @param boolean           If the register was successful
+ * @return boolean          If the register was successful
  */
 function register($conn, $username, $password, $name, $email)
 {
