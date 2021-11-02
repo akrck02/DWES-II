@@ -3,6 +3,8 @@
     require_once "../db/model.php";
     session_start();
     $conn = connectDB();
+
+    if(!$conn) header("location:./error.php")
 ?>
 <html>
     <head>

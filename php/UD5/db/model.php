@@ -3,6 +3,7 @@ require_once "config.php";
 
 /**
  * Connect to the database
+ * @return mysqli The database connection
  */
 function connectDB()
 {
@@ -13,6 +14,8 @@ function connectDB()
 
 /**
  * Get all the categories 
+ * @param mysqli $conn  the database connection  
+ * @return array        The categories
  */
 function getCategories($conn)
 {
@@ -33,6 +36,9 @@ function getCategories($conn)
 
 /**
  * Get items from an specific categories
+ * @param mysqli $conn      The database connection
+ * @param int $category     The category id to search for
+ * @return array            The items from the category
  */
 function getItemsFromCategory($conn, $category)
 {
@@ -65,6 +71,8 @@ function getItemsFromCategory($conn, $category)
 
 /**
  * Get expired items
+ * @param mysqli $conn  The database connection
+ * @return array        The expired items
  */
 function  getExpiredItems($conn){
     $items = [];
@@ -89,6 +97,9 @@ function  getExpiredItems($conn){
 
 /**
  * Remove an item
+ * @param mysqli $conn  The database connection
+ * @param int $item     The item id to remove
+ * @return boolean      if item was remove
  */
 function removeItem($conn,$item){
     $sql = "DELETE FROM item WHERE id=?";
@@ -99,20 +110,32 @@ function removeItem($conn,$item){
     $prepared = $statement->bind_param("i", intval($item));
     $executed = $statement->execute();
 
-    $statement = $conn->prepare($sql2);
-    $prepared = $statement->bind_param("i", intval($item));
-    $executed = $statement->execute();
+    if($prepared and $executed){
+        $statement = $conn->prepare($sql2);
+        $prepared = $statement->bind_param("i", intval($item));
+        $executed = $statement->execute();
 
-    $statement = $conn->prepare($sql3);
-    $prepared = $statement->bind_param("i", intval($item));
-    $executed = $statement->execute();
+        if($prepared and $executed){
+            $statement = $conn->prepare($sql3);
+            $prepared = $statement->bind_param("i", intval($item));
+            $executed = $statement->execute();
 
-    return $prepared and $executed;
+            return $prepared and $executed;
+        }
+
+    } 
+
+    return false;
 }
 
 
 /**
  * Update item
+ * @param mysqli $conn      The database connection
+ * @param int $id           The item id
+ * @param double $price     The new item price 
+ * @param string $date      The new expiration date
+ * @return boolean          If the item was updated
  */
 function updateItem($conn,$id,$price,$date){
     $sql = "UPDATE item SET precio_partida=?, fechafin=? WHERE id=?";
@@ -126,7 +149,11 @@ function updateItem($conn,$id,$price,$date){
 
 
 /** 
- * Insert image in the database
+ * Insert image in the database 
+ * @param mysqli $conn  The database connection
+ * @param int $item     The image owner 
+ * @param int $image    The image id 
+ * @return boolean      If the image was upload
  **/
 function newImage($conn,$item,$image)
 {
@@ -144,6 +171,9 @@ function newImage($conn,$item,$image)
 
 /**
  * Remove image
+ * @param mysqli $conn      The database connection
+ * @param int $image        The image id to remove
+ * @return boolean          If the image was removed
  */
 function removeImage($conn, $image){
     $sql = "DELETE FROM imagen WHERE id=?";
@@ -156,7 +186,10 @@ function removeImage($conn, $image){
 }
 
 /**
- * Get an image for the item
+ * Get an image for the item 
+ * @param mysqli $conn      The database connection
+ * @param int $item         The item id to get the image
+ * @return array|boolean    The image if found, else false
  */
 function getImageFromItem($conn, $item)
 {
@@ -171,6 +204,9 @@ function getImageFromItem($conn, $item)
 
 /**
  * Get an image for the item
+ * @param mysqli $conn  The database connection
+ * @param int $item     The item id to get the images 
+ * @return array        The images of the item
  */
 function getImagesFromItem($conn, $item)
 {
@@ -194,6 +230,9 @@ function getImagesFromItem($conn, $item)
 
 /**
  * get an item from ID
+ * @param mysqli $conn      The database connection
+ * @param int $id           The item id
+ * @return array|boolean    The item if found, else false
  */
 function getItem($conn, $id)
 {
@@ -224,6 +263,13 @@ function getItem($conn, $id)
 
 /**
  * Get item by properties
+ * @param mysqli $conn          The database connection
+ * @param int $category         The category id 
+ * @param string $user          The username
+ * @param string $name          The item name
+ * @param string $description   The item description
+ * @param string $date          The item expiration date
+ * @return array|boolean        The item if found, else false
  */
 function getItemByProperties($conn,$category,$user,$name,$description,$date){
     $sql = "SELECT * FROM item WHERE id_cat=? AND id_user=? AND nombre=? AND descripcion=? AND fechafin=?";
@@ -254,7 +300,11 @@ function getItemByProperties($conn,$category,$user,$name,$description,$date){
 }
 
 /**
- * Get user items
+ * Get if the user if owner of thee item
+ * @param mysqli $conn  The database connection
+ * @param int $user     The user id
+ * @param int $item     The item id
+ * @return boolean      If user is owner
  */
 function isItemOwner($conn, $user, $item){
     $sql = "SELECT * FROM item WHERE id_user=? AND id=?";
@@ -277,6 +327,13 @@ function isItemOwner($conn, $user, $item){
 
 /** 
  * Insert intem in the database
+ * @param mysqli $conn          The database connection
+ * @param int $category         The category id 
+ * @param string $user          The username
+ * @param string $name          The item name
+ * @param string $description   The item description
+ * @param string $date          The item expiration date
+ * @return boolean              If the new item was inserted
  **/
 function newitem($conn,$category,$user,$name,$price,$description,$date)
 {
@@ -294,7 +351,10 @@ function newitem($conn,$category,$user,$name,$price,$description,$date)
 }
 
 /**
- * Get items bid
+ * Get bids of an item
+ * @param mysqli $conn  The database connection
+ * @param int $item     The id item 
+ * @return array        The bids
  */
 function getItemsBids($conn, $item)
 {
@@ -319,6 +379,11 @@ function getItemsBids($conn, $item)
 
 /**
  * Create a new bid
+ * @param mysqli $conn  The database connection
+ * @param int $item     The item id
+ * @param int $item     The user id
+ * @param double $item  The bid quantity
+ * @return boolean      If the bid was inserted
  */
 function newBid($conn, $item, $user, $quantity)
 {
@@ -344,6 +409,11 @@ function newBid($conn, $item, $user, $quantity)
 
 /**
  * Get the user bids of the day
+ * @param mysqli $conn  The database connection
+ * @param int $item     The item id
+ * @param int $user     The user id 
+ * @param string $date  The item expiration date
+ * @return array        The user bids of the day
  */
 function getDayUserBids($conn, $item, $user, $date)
 {
@@ -367,6 +437,10 @@ function getDayUserBids($conn, $item, $user, $date)
 
 /**
  * Generate a verification string
+ * This string is generated adding random 
+ * alphabetic characters to itself while 
+ * max character limit is not reached
+ * @return string The verfication string 
  */
 function generateVerificationString()
 {
@@ -383,6 +457,12 @@ function generateVerificationString()
 
 /**
  * Register a user 
+ * @param mysqli $conn      The database connection
+ * @param string $username  The username
+ * @param string $password  The password
+ * @param string $name      The user full name
+ * @param string $email     The user email
+ * @param boolean           If the register was successful
  */
 function register($conn, $username, $password, $name, $email)
 {
@@ -405,6 +485,10 @@ function register($conn, $username, $password, $name, $email)
 
 /**
  * Login into the app
+ * @param mysqli $conn          The database connection
+ * @param string $username      The username
+ * @param string $password      The password
+ * @return boolean              If login is correct
  */
 function login($conn, $username, $password)
 {
@@ -428,6 +512,9 @@ function login($conn, $username, $password)
 
 /**
  * Check if the username exists
+ * @param mysqli $conn          The database connection
+ * @param string $username      The username
+ * @return boolean              If user exists
  */
 function userExists($conn, $username)
 {
@@ -451,6 +538,9 @@ function userExists($conn, $username)
 
 /**
  * Get user from database 
+ * @param mysqli $conn          The database connection
+ * @param string $username      The username
+ * @return array|false          The user if found, elsw false
  */
 function getUser($conn, $username)
 {
@@ -472,6 +562,9 @@ function getUser($conn, $username)
 
 /**
  * Get username by id
+ * @param mysqli $conn      The database connection
+ * @param int $id           The user id
+ * @return array|false      The username if found, else false
  */
 function getUsername($conn, $id)
 {
@@ -489,4 +582,42 @@ function getUsername($conn, $id)
 
     $statement->close();
     return $user;
+}
+
+
+/**
+ * Get almost expired items
+ * @param mysqli $conn The database connection
+ * @return array The expired item
+ */
+function getAlmostExpiredItems($conn)
+{
+    $resultItem=[];
+    $queryItem="
+    SELECT * 
+    FROM item 
+    WHERE TIMESTAMPDIFF(DAY, fechafin, now()) < 3
+    AND NOT EXISTS
+    (
+        SELECT *
+        FROM puja
+        WHERE puja.id_item = item.id
+    )
+    OR precio_partida * 1.1 <
+    (
+        SELECT max(puja.cantidad)
+        FROM puja
+        WHERE puja.id_item = item.id
+    );";
+
+    $st=$conn -> prepare($queryItem);
+    $stExecuted=$st -> execute();
+    if($stExecuted) 
+    {
+        $stResult=$st -> get_result();
+        while($item=$stResult -> fetch_assoc()) 
+            $resultItem[]=$item;
+    }
+    $st -> close();
+    return $resultItem;
 }
