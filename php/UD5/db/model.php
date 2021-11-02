@@ -49,9 +49,17 @@ function getItemsFromCategory($conn, $category)
     if ($category != "all") {
         $sql = "SELECT * FROM ITEM WHERE id_cat=?";
         $statement = $conn->prepare($sql);
+
+        if($statement === false)
+            return $items;
+
         $prepared = $statement->bind_param("i", $category);
     } else {
         $statement = $conn->prepare($sql);
+
+        if($statement === false)
+            return $items;
+
         $prepared = true;
     }
 
@@ -79,7 +87,10 @@ function  getExpiredItems($conn){
     $sql = "select * from item where TIMESTAMPDIFF(SECOND, fechafin, now()) > 1";
     
     $statement = $conn->prepare($sql);
-    echo mysqli_error($conn);
+
+    if($statement === false)
+        return $items;
+
     $prepared = true;
     $executed = $statement->execute();
 
@@ -107,16 +118,28 @@ function removeItem($conn,$item){
     $sql3 = "DELETE FROM puja WHERE id_item=?";
    
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("i", intval($item));
     $executed = $statement->execute();
 
     if($prepared and $executed){
         $statement = $conn->prepare($sql2);
+
+        if($statement === false)
+            return false;
+
         $prepared = $statement->bind_param("i", intval($item));
         $executed = $statement->execute();
 
         if($prepared and $executed){
             $statement = $conn->prepare($sql3);
+
+            if($statement === false)
+                return false;
+
             $prepared = $statement->bind_param("i", intval($item));
             $executed = $statement->execute();
 
@@ -141,6 +164,10 @@ function updateItem($conn,$id,$price,$date){
     $sql = "UPDATE item SET precio_partida=?, fechafin=? WHERE id=?";
    
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("dsi", floatval($price),$date,intval($id));
     $executed = $statement->execute();
 
@@ -160,7 +187,10 @@ function newImage($conn,$item,$image)
     $sql = "INSERT INTO imagen(id_item,imagen) VALUES(?,?)";
 
     $statement = $conn->prepare($sql);
-    echo mysqli_error($conn);
+  
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("is", intval($item), $image);
     $executed = $statement->execute();
     $statement->close();
@@ -179,6 +209,10 @@ function removeImage($conn, $image){
     $sql = "DELETE FROM imagen WHERE id=?";
    
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("i", intval($image));
     $executed = $statement->execute();
 
@@ -211,12 +245,17 @@ function getImageFromItem($conn, $item)
 function getImagesFromItem($conn, $item)
 {
     $sql = "SELECT * FROM IMAGEN WHERE id_item=?";
+    $images = [];
 
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return $images;
+
     $prepared = $statement->bind_param("i", $item);
     $executed = $statement->execute();
 
-    $images = [];
+   
     if ($prepared and $executed) {
 
         $result = $statement->get_result();
@@ -239,6 +278,10 @@ function getItem($conn, $id)
     $sql = "SELECT * FROM item WHERE id=?";
 
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("i", $id);
     $executed = $statement->execute();
 
@@ -275,6 +318,10 @@ function getItemByProperties($conn,$category,$user,$name,$description,$date){
     $sql = "SELECT * FROM item WHERE id_cat=? AND id_user=? AND nombre=? AND descripcion=? AND fechafin=?";
 
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("iisss", $category, $user, $name, $description, $date);
     $executed = $statement->execute();
 
@@ -310,6 +357,10 @@ function isItemOwner($conn, $user, $item){
     $sql = "SELECT * FROM item WHERE id_user=? AND id=?";
    
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("ii", intval($user), intval($item));
     $executed = $statement->execute();
 
@@ -341,7 +392,10 @@ function newitem($conn,$category,$user,$name,$price,$description,$date)
    
 
     $statement = $conn->prepare($sql);
-    echo mysqli_error($conn);
+    
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("iisdss", $category, $user, $name, $price, $description, $date);
     $executed = $statement->execute();
     $statement->close();
@@ -362,6 +416,10 @@ function getItemsBids($conn, $item)
     $bids = [];
 
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return $bids;
+
     $prepared = $statement->bind_param("i", $item);
     $executed = $statement->execute();
 
@@ -387,8 +445,7 @@ function getItemsBids($conn, $item)
  */
 function newBid($conn, $item, $user, $quantity)
 {
-    echo $quantity;
-
+    
     $date = date("Y-m-d");
     $max = count(getDayUserBids($conn,$item,$user,$date)) >= 3;
   
@@ -398,6 +455,10 @@ function newBid($conn, $item, $user, $quantity)
     $sql = "INSERT INTO puja(id_item,id_user,cantidad,fecha) VALUES(?,?,?,?)";
 
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("ssds", $item, $user, floatval($quantity), $date);
     $executed = $statement->execute();
     $statement->close();
@@ -421,9 +482,12 @@ function getDayUserBids($conn, $item, $user, $date)
     $sql = "SELECT * FROM puja WHERE id_item=? AND id_user=? AND fecha=?";
 
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return $bids;
+
     $prepared = $statement->bind_param("iis",$item, $user, $date);
     $executed = $statement->execute();
-
 
     if ($prepared and $executed) {
         $result = $statement->get_result();
@@ -475,6 +539,10 @@ function register($conn, $username, $password, $name, $email)
     $password = md5($password);
 
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("sssssii", $username, $name, $password, $email, $verification, intval($active), intval($false));
     $executed = $statement->execute();
     $statement->close();
@@ -497,6 +565,10 @@ function login($conn, $username, $password)
     $password = md5($password);
 
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("ss", $username, $password);
     $executed = $statement->execute();
 
@@ -522,6 +594,10 @@ function userExists($conn, $username)
     $sql = "SELECT * FROM usuario WHERE username=?";
 
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("s", $username);
     $executed = $statement->execute();
 
@@ -547,6 +623,10 @@ function getUser($conn, $username)
     $sql = "SELECT * FROM usuario WHERE username=?";
 
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("s", $username);
     $executed = $statement->execute();
 
@@ -571,6 +651,10 @@ function getUsername($conn, $id)
     $sql = "SELECT * FROM usuario WHERE id=?";
 
     $statement = $conn->prepare($sql);
+
+    if($statement === false)
+        return false;
+
     $prepared = $statement->bind_param("i", $id);
     $executed = $statement->execute();
 
