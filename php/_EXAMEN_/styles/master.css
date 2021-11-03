@@ -1,0 +1,345 @@
+
+:root {
+    --font : 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --smooth-shadow : 0px 2px 4px rgba(0,0,0,.15);
+    --lite-shadow:  0px 2px 4px rgba(0,0,0,.05);
+
+    --error-color : #fa2000;
+    --accent-color : dodgerblue;
+    
+    --white :  #fff;
+    --black : #000;
+    --elegant-black : #202020;
+    --shutdown-black : #404040;
+    --lightgray : #f1f1f1;
+}
+
+
+.error { 
+    color: var(--error-color);
+}
+
+body {
+    font-family: var(--font);
+    margin: 0;
+}
+
+#header {
+    background-color: var(--black);
+    padding: 15px;
+    height: 50px;
+    text-align: center;
+    color: var(--white);
+}
+
+#header h1 {
+    margin: 0;
+}
+
+#menu {
+   height: 45px;
+   display: flex; 
+   justify-content: center;
+   background: var(--lightgray);
+} 
+
+#menu a{
+    padding: 10px;
+}
+
+a {
+    text-decoration: none;
+    color: var(--elegant-black);
+    transition: .25s;
+}
+
+a:hover{
+    color: var(--accent-color);
+}
+
+#menu a:hover {
+    transform: translateY(-3%);
+}
+
+#menu a.selected {
+    font-weight: bold;
+}
+
+#bar li{
+    height: auto;
+}
+
+#bar a:hover , #bar a.selected{
+    color: var(--accent-color);
+}
+
+#container {
+    display: flex;
+    min-height: calc(100% - 80px - 45px);
+}
+
+#bar {
+    padding: 15px;
+    background: var(--lightgray);
+    max-width: 270px;
+    width: 30%;
+}
+
+#bar h2 {
+    margin: 0;
+}
+
+#main {
+    padding: 15px;
+    width: 70%;
+}
+
+#main h1 {
+    margin-top: 0;
+    margin-left: 12px;
+}
+
+#main table img {
+    margin: 10px;
+    width: 150px;
+    height: 150px;
+    border-radius: 5px;
+    filter: drop-shadow(var(--smooth-shadow));
+    object-fit: cover;
+    background: var(--lightgray);
+}
+
+table{
+    width: 100%;
+}
+
+th {
+    background: var(--lightgray);
+    padding: 10px;
+}
+
+td {
+    padding: 10px;
+    text-align: center;
+}
+
+table.register td, table.login td {
+    text-align: left;
+}
+
+label {
+    cursor: pointer;
+    transition: .25s;
+}
+
+label:hover{
+    color: var(--accent-color);
+    user-select: none;
+}
+
+input[type='text'], input[type='password'] , input[type='number']{
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid var(--elegant-black);
+    transition: .25s;
+}
+
+input[type='text'].error, input[type='password'].error, input[type='number'].error{
+    color: var(--black);
+    border-bottom: 1px solid var(--error-color);
+}
+
+input[type='text'].error:focus, input[type='password']:focus.error, input[type='number']:focus.error{
+    border-bottom: 1px solid var(var(--error-color));
+}
+
+textarea {
+    border: 1px solid var(--elegant-black);
+    resize: none;
+    width:100%;
+    padding : 10px;
+}
+
+select {
+    border:none;
+    padding:5px;
+    border-bottom: 1px solid var(--elegant-black);
+    transition: .25s;
+}
+
+option {
+   background: var(--lightgray);
+}
+
+input[type='submit']{
+    cursor: pointer;
+    padding: 10px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 3px;
+    box-shadow: var(--smooth-shadow);
+    transition: .25s;
+}
+
+input[type='submit']:hover {
+    box-shadow: var(--lite-shadow);
+}
+
+input[type='text']:focus, input[type='password']:focus , input[type='number']:focus {
+    outline: none;
+    border-bottom: 1px solid var(--accent-color);
+}
+
+textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+/** Table default settings **/
+#main table.items td:nth-child(1) {
+    width: 7%;
+    max-width: 160px;
+}
+
+#main table.items td:nth-child(2) {
+    width: 30%;
+}
+
+#main table.items td:nth-child(3) {
+    width: 10%;
+}
+
+#main table.items td:nth-child(4) {
+    width: 10%;
+    max-width: 50px;
+}
+
+#main table.items td:nth-child(5) {
+    width: 15%;
+    max-width: 150px;
+}
+
+#main table.items td p.no-image {
+    margin: 10px;
+    width: 150px;
+    height: 150px;
+
+    border-radius: 5px;
+    background: var(--lightgray);
+    color: var(--shutdown-black);
+
+    font-weight: bold;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+/** Login table **/
+#main table.login {
+    width:300px;
+}
+
+#main table.login td:nth-child(1) {
+    width: 5%;
+    max-width: 20px;
+}
+
+#main table.login td:nth-child(2) {
+    width: 5%;
+    max-width: 50px;
+}
+
+#main table.login td:nth-child(3) {
+    width: 5%;
+}
+
+#main table.login td:nth-child(2) input[type=submit] {
+    width:100px;
+}
+
+/** item details **/
+div.item-details img {
+    width:150px; 
+    height:150px; 
+    object-fit:cover;
+    border-radius: 10px;
+    background: var(--lightgray);
+    box-shadow: var(--smooth-shadow);
+    margin:10px;
+}
+
+div.item-details p.mininfo {
+    padding: 0px 10px;
+}
+
+div.item-details p {
+    padding: 0px 10px;
+}
+
+/** New bid **/
+table.new-bid{
+    width:200px;
+}
+
+/** New item **/
+div.new-item table {
+    max-width:700px;
+}
+
+div.new-item table td {
+    text-align: start;
+}
+
+div.new-item table td table td{
+    text-align: center;
+}
+
+div.new-item table td table td select{
+    width:100%;
+}
+
+div.edit-item table td {
+    text-align: start;
+}
+
+div.edit-item table.item-info td input {
+    margin: 2.5px;
+}
+
+div.edit-item img {
+    width:150px; 
+    height:150px; 
+    object-fit:cover;
+    border-radius: 10px;
+    background: var(--lightgray);
+    box-shadow: var(--smooth-shadow);
+    margin:10px;
+    transition: .25s;
+    filter: drop-shadow(var(--smooth-shadow)) grayscale(40%) !important;
+}
+
+div.edit-item tr:hover img {
+   transform: scale(1.05);
+   filter: drop-shadow(var(--smooth-shadow)) grayscale(0%) !important;
+}
+
+div.edit-item table.item-images{
+    max-width: 200px;
+}
+
+div.overdue table{
+    max-width: 800px;
+}
+
+div.overdue table td{
+    max-width: 200px;
+    text-align: start;
+}
+
+div.overdue input[type='submit']#delete {
+    width:100%;
+}
