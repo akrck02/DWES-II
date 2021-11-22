@@ -1,9 +1,6 @@
 <?php 
     require_once "header.php";
     $expiredItems = getExpiredItems($conn);
-    
-
-
 ?>
 
 <h1>Ultimas subastas vencidas</h1>

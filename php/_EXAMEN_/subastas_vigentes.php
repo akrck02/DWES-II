@@ -74,7 +74,6 @@
             $monthDiff = $diff -> m;
             $dayDiff =  $diff -> d;
 
-
             $diffText = "";
             if($yearDiff > 0)
                 $diffText .= $yearDiff.(($yearDiff == 1) ? " Año " : " Años ");
@@ -84,7 +83,7 @@
             
             if($dayDiff > 0)
                 $diffText .= $dayDiff.(($dayDiff == 1) ? " Dia " : " Dias ");
-
+                
             echo  "<tr>";
             
             echo "<td>".$item['nombre']."</td>";            
