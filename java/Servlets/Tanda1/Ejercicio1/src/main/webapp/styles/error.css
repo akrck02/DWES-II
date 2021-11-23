@@ -29,3 +29,7 @@
  }
  
 
+p#connect{
+    position:absolute;
+    bottom:10px;
+}

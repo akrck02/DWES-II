@@ -8,6 +8,8 @@ import ejercicio1.beans.ConversionCF;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.HashSet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +20,14 @@ import javax.servlet.http.HttpServletResponse;
  * @author aketz
  */
 public class conversor extends HttpServlet {
+    
+    private HashSet<String> locales;
+
+    @Override
+    public void init() throws ServletException {
+        super.init(); 
+        locales = new HashSet<>();
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,7 +40,10 @@ public class conversor extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
+        final String locale = request.getLocale().toString(); 
+        locales.add(locale);
+            
         if (request.getParameter("cel-fah") != null) {
             final String celsius = request.getParameter("celsius");
 
@@ -102,7 +115,7 @@ public class conversor extends HttpServlet {
             out.println(
                     "<!DOCTYPE html>"
                     + "<html>"
-                    + "<head>"
+                    + "<head>" 
                     + "<title>Conversion exitosa</title>"
                     + "<link rel='stylesheet' href='http://localhost:8080/Ejercicio1/styles/error.css'>"
                     + "</head>"
@@ -111,6 +124,8 @@ public class conversor extends HttpServlet {
                     + "<p><b>Valor en Celsius: </b>" + formatter.format(celsius) + "</p>"
                     + "<p><b>Valor en Fahrenheit: </b>" + formatter.format(fahrenheit) + "</p>"
                     + "<a href='http://localhost:8080/Ejercicio1'>Volver</a>"
+                    + "<p id='connect'>Se han establecido conexiones desde " + locales.size() + " distintos locale's</p>"
+                    // + "<p>" + Arrays.toString(locales.toArray()) + "</p>"
                     + "</body>"
                     + "</html>"
             );
