@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author aketz
  */
-public class conversor extends HttpServlet {
+public class Conversor extends HttpServlet {
     
     private HashSet<String> locales;
 

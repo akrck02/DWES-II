@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Start Page</title>
+        <link rel="stylesheet" href="./styles/master.css"/>
+    </head>
+    <body>
+        <form action="http://localhost:8080/Ejercicio3/celdas" method='post'>
+            <h1>Dimensiones de la matriz</h1>
+            <table>
+                <tr>
+                    <td>
+                        <label for="rows">Filas:</label>
+                    </td>
+                    <td>
+                        <input type="text" name="rows" id="rows" value="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="columns">Columnas:</label></td>
+                    <td>
+                        <input type="text" name="columns" id="columns" value="" />
+                    </td>
+                </tr>
+            </table>
+            <label style='padding:10px 0'><input type="checkbox" name="gray" value="ON" />&nbsp;Gris de fondo</label>
+            <input type="submit" value="Generar tabla" name="send" />
+        </form>
+    </body>
+</html>

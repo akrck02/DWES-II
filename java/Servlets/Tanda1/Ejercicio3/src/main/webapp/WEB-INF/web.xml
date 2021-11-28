@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
+    <servlet>
+        <servlet-name>IntroCeldas</servlet-name>
+        <servlet-class>ejercicio3.servlets.IntroCeldas</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GuardaMatriz</servlet-name>
+        <servlet-class>ejercicio3.servlets.GuardaMatriz</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IntroCeldas</servlet-name>
+        <url-pattern>/celdas</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GuardaMatriz</servlet-name>
+        <url-pattern>/guardar</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+</web-app>
