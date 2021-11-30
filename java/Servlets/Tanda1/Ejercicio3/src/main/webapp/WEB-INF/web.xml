@@ -8,6 +8,10 @@
         <servlet-name>GuardaMatriz</servlet-name>
         <servlet-class>ejercicio3.servlets.GuardaMatriz</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>VisorMatrices</servlet-name>
+        <servlet-class>ejercicio3.servlets.VisorMatrices</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>IntroCeldas</servlet-name>
         <url-pattern>/celdas</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>GuardaMatriz</servlet-name>
         <url-pattern>/guardar</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VisorMatrices</servlet-name>
+        <url-pattern>/visor</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

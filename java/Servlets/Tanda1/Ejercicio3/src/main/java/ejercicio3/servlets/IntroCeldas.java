@@ -6,6 +6,7 @@ package ejercicio3.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,46 +31,63 @@ public class IntroCeldas extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-         
+
             try {
-                int rows = Integer.parseInt(request.getParameter("rows"));
-                int columns = Integer.parseInt(request.getParameter("columns"));
-                drawMatrix(out, rows, columns);
-            } catch(NumberFormatException e) { 
-                response.sendRedirect("http://localhost:8080/Ejercicio3/");
+                
+                String rowsString = request.getParameter("rows") != null ? request.getParameter("rows") : request.getAttribute("rows") + "";
+                String columnsString = request.getParameter("columns") != null ? request.getParameter("columns") : request.getAttribute("columns") + "";
+                
+                int rows = Integer.parseInt(rowsString);
+                int columns = Integer.parseInt(columnsString);
+                boolean background = Boolean.parseBoolean(request.getParameter("background"));
+
+
+                String error = (String) request.getAttribute("error");
+                drawMatrix(out, rows, columns, background, error);
+            } catch (NumberFormatException e) {
+                RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/");
+                dispatcher.forward(request, response);
             }
+
         }
     }
-    
-    private void drawMatrix(PrintWriter out, int rows, int columns){
-           /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet IntroCeldas</title>");   
-           
-            out.println("<link rel='stylesheet' href='http://localhost:8080/Ejercicio3/styles/master.css'>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<form action='http://localhost:8080/Ejercicio3/celdas' method=''>");
-            out.println("<h1>Introduce valores: </h1>");
-            
-            out.print("<table id='matrix'>");
-            for (int i = 1; i <= rows; i++) {
-                out.print("<tr>");
-                for (int j = 1; j <= columns; j++) {
-                    out.print("<td>");
-                    out.print("<input type='text' name='celda" + i + "-" + j + "'>");
-                    out.print("</td>");
-                }
-                out.print("</tr>");
+
+    private void drawMatrix(PrintWriter out, int rows, int columns, boolean background,String error) {
+        /* TODO output your page here. You may use following sample code. */
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>Matrices.com - Rellenar</title>");
+        out.println("<link rel='stylesheet' href='http://localhost:8080/Ejercicio3/styles/master.css'>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<form action='http://localhost:8080/Ejercicio3/guardar' method='post'>");
+        out.println("<h1>Introduce valores: </h1>");
+        
+        out.print("<table id='matrix' style='background:" + (background ? "#f1f1f1" : "none") + "'>");
+        for (int i = 1; i <= rows; i++) {
+            out.print("<tr>"); 
+            for (int j = 1; j <= columns; j++) {
+                out.print("<td>");
+                out.print("<input type='text' name='celda" + i + "-" + j + "'>");
+                out.print("</td>");
             }
-            out.print("</table>");
-            out.print("<input type='submit' name='' value='Guardar matriz'>");
-            out.print("<input type='submit' name='' value='Restablecer'>");
-            out.println("</form>");
-            out.println("</body>");
-            out.println("</html>");
+            out.print("</tr>");
+        }
+        out.print("</table>");
+        
+        if(error != null)
+            out.print("<p class='error'>" + error +"</p>");
+        
+        out.print("<input type='hidden' name='rows' value='" + rows + "'>");
+        out.print("<input type='hidden' name='columns' value='" + columns + "'>");
+        out.print("<input type='hidden' name='background' value='" + background + "'>");
+        out.print("<input type='submit' name='save' value='Guardar matriz'>");
+        out.print("<input type='reset' value='Restablecer'>");
+        out.println("</form>");
+        out.println("</body>");
+
+        out.println("</html>");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -5,6 +5,7 @@
 package ejercicio1.servlets;
 
 import ejercicio1.beans.ConversionCF;
+import ejercicio1.beans.UrlToolkit;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
@@ -85,6 +86,12 @@ public class Conversor extends HttpServlet {
 
     }
 
+    /**
+     * Sends an error view in HTML to the client
+     * @param request   The current request
+     * @param response  The response to offer
+     * @param message   Error message to send
+     */
     private void errorPage(HttpServletRequest request, HttpServletResponse response, String message) {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
@@ -107,23 +114,33 @@ public class Conversor extends HttpServlet {
         }
     }
 
+    /**
+     * Result HTML view that shows the temperature 
+     * and the conversion result
+     * @param request       The current request
+     * @param response      The response to offer 
+     * @param celsius       Celsius temperature
+     * @param fahrenheit    Fahrenheit temperature 
+     */
     private void resultPage(HttpServletRequest request, HttpServletResponse response, double celsius, double fahrenheit) {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
 
             DecimalFormat formatter = new DecimalFormat("#0.00");
+            String baseUrl = UrlToolkit.baseUrl(request);
+            
             out.println(
                     "<!DOCTYPE html>"
                     + "<html>"
                     + "<head>" 
                     + "<title>Conversion exitosa</title>"
-                    + "<link rel='stylesheet' href='http://localhost:8080/Ejercicio1/styles/error.css'>"
+                    + "<link rel='stylesheet' href='" + baseUrl + "/styles/error.css'>"
                     + "</head>"
                     + "<body>"
                     + "<h2>Resultado de la conversion</h1>"
                     + "<p><b>Valor en Celsius: </b>" + formatter.format(celsius) + "</p>"
                     + "<p><b>Valor en Fahrenheit: </b>" + formatter.format(fahrenheit) + "</p>"
-                    + "<a href='http://localhost:8080/Ejercicio1'>Volver</a>"
+                    + "<a href='" + baseUrl + "'>Volver</a>"
                     + "<p id='connect'>Se han establecido conexiones desde " + locales.size() + " distintos locale's</p>"
                     // + "<p>" + Arrays.toString(locales.toArray()) + "</p>"
                     + "</body>"

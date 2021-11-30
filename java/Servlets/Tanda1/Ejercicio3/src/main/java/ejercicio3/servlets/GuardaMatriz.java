@@ -4,16 +4,20 @@
  */
 package ejercicio3.servlets;
 
+import ejercicio3.beans.AlmacenMatrices;
+import ejercicio3.beans.UrlToolkit;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
- * @author aketz
+ * Server that saves the matrix send by form
+ * on a static list or redirects
+ * @author akrck02
  */
 public class GuardaMatriz extends HttpServlet {
 
@@ -30,18 +34,72 @@ public class GuardaMatriz extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet GuardaMatriz</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet GuardaMatriz at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+
+            int rows = 0;
+            int columns = 0;
+
+            /*
+             * Get rows and columns or redirect to index 
+             */
+            try {
+                rows = Integer.parseInt(request.getParameter("rows"));
+                columns = Integer.parseInt(request.getParameter("columns"));
+            } catch (NumberFormatException e) {
+                RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/");
+                dispatcher.forward(request, response);
+            }
+
+            /*
+             * create a matrix and show menu
+             * if fails redirects to IntroCeldas with an error
+             */
+            try {
+                int[][] matrix = new int[rows][columns];
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < columns; j++) {
+                        int num = Integer.parseInt(request.getParameter("celda" + (i + 1) + "-" + (j + 1)));
+                        matrix[i][j] = num;
+                    }
+                }
+
+                AlmacenMatrices.addMatrix(matrix);
+                String baseUrl = UrlToolkit.baseUrl(request);
+                drawSuccessMessage(baseUrl, out, rows, columns);
+            } catch (NumberFormatException e) {
+                RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/celdas");
+                request.setAttribute("error", "Debes rellenar correctamente la matriz");
+                request.setAttribute("rows", rows);
+                request.setAttribute("columns", columns + "");
+                dispatcher.forward(request, response);
+            }
         }
     }
+
+    /**
+     * Draw the success message on the client 
+     * with a HTML view
+     * 
+     * @param baseUrl   The webapp base URL
+     * @param out       HTML printer
+     * @param rows      row count of the saved matrix
+     * @param columns   column count of the saved matrix
+     */
+    private void drawSuccessMessage(String baseUrl, PrintWriter out, int rows, int columns) {        
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>Matrices.com - Matriz guardada</title>");
+        out.println("<link rel='stylesheet' href='" + baseUrl + "/styles/master.css'>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<h1>Matriz de " + rows + " x " + columns +" guardada correctamente</h1>");
+        out.println("<p>Numero de matrices guardadas: " + AlmacenMatrices.getMatrixBundle().size() + "</p>");
+        out.println("<a href='" + baseUrl + "'>Añadir nueva matriz</a>");
+        out.println("<a href='" + baseUrl + "/visor'>Ver matrices</a>");
+        out.println("</body>");
+        out.println("</html>");
+    }
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

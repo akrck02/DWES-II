@@ -4,6 +4,7 @@
  */
 package ejercicio2.servlets;
 
+import ejercicio2.beans.UrlToolkit;
 import ejercicio2.io.IoManager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -46,9 +47,9 @@ public class ServletFormOpinion extends HttpServlet {
                 String error = null;
                 
                 if(name == null || name.trim().length() == 0)
-                   error = "Introduzca un nombre";
+                    error = "Introduzca un nombre";
                 else  if(rating == null) 
-                  error = "Selecciona una valoración";
+                    error = "Selecciona una valoración";
                 else if(rating.equals("B") && sections != null){
                     String line = name + " ";
                     if(surname != null && surname.length() > 0)
@@ -62,22 +63,31 @@ public class ServletFormOpinion extends HttpServlet {
         }
     }
     
+    /**
+     * Draws an opinion form that sends the information
+     * to itself.
+     * @param request   The current request
+     * @param response  The response to offer
+     * @param out       HTML printer
+     * @param error     The current error or null
+     */
     private void drawMainPage(HttpServletRequest request, HttpServletResponse response, PrintWriter out, String error){
         
         final ServletContext context = getServletContext();
+        final String baseUrl = UrlToolkit.baseUrl(request);
         
         out.print("<!DOCTYPE html>");
         out.print("<html>");
         out.print("<head>");
-        out.print("<title>Encuesta de opinión</title>");
-        out.print("<link rel='stylesheet' href='http://localhost:8080/Ejercicio2/styles/master.css' />");
+        out.print("<title>Encuestas.com - Opinión</title>");
+        out.print("<link rel='stylesheet' href='" + baseUrl + "/styles/master.css' />");
         out.print("</head>");
         out.print("<body>");
         
         if(error != null)
            out.print("<p id='error'>" + error + "</p>");
             
-        out.print("<form action='http://localhost:8080/Ejercicio2/opinion' method='post'>");
+        out.print("<form action='" + baseUrl + "/opinion' method='post'>");
         out.print("<h2>Encuesta de opinión</h2>");
         out.print("<label><b>Nombre:</b> <input type='text' name='name'></label><br><br>");
         out.print("<label><b>Apellidos:</b> <input type='text' name='surname'></label>");

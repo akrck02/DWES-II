@@ -50,7 +50,7 @@ input[type=text]:focus{
 
 input[type=submit] , #adminButton{
     padding: 10px;
-    background : #f1f1f1; 
+    background : #f1f1f1;
     border: none;
     border-radius: 3px;
     box-shadow: 0px 2px 4px rgba(0,0,0,.15);
@@ -70,6 +70,7 @@ input[type=submit]:hover, #adminButton:hover{
     color: #fff;
     background: #ff1313;
     border-radius: 6px;
+    animation: fadein .5s;
 }
 
 form{
@@ -77,6 +78,20 @@ form{
     flex-direction: inherit;
     justify-content: inherit;
     align-items: inherit;
+}
+
+@keyframes fadein{
+    0%{
+        opacity: 0;
+        transform: scale(.9);
+    }
+    25%{
+        transform: scale(.9);
+    }
+    100%{
+        opacity:1;
+        transform: scale(1);
+    }
 }
 
 #adminButton {

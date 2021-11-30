@@ -5,10 +5,10 @@
 package ejercicio1.beans;
 
 /**
- *
- * @author aketz
+ * Converter of celsius and fahrengheit temperatures
+ * @author akrck02
  */
-public class ConversionCF {
+public final class ConversionCF {
     
     private double celsius;
     private double fahrenheit; 
