@@ -4,6 +4,7 @@
  */
 package servlet;
 
+import bean.Test;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ import toolkit.Url;
  */
 @WebServlet(name = "Result", urlPatterns = {"/Resultado"})
 public class Result extends HttpServlet {
-    
+
     private String baseUrl;
 
     /**
@@ -36,31 +37,37 @@ public class Result extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        if(baseUrl == null)
-           baseUrl = Url.baseUrl(request);
-        
+        if (baseUrl == null) {
+            baseUrl = Url.baseUrl(request);
+        }
+
         HttpSession session = request.getSession();
         if (session == null) {
             response.sendRedirect(baseUrl);
             return;
         }
 
+        final Test test = (Test) session.getAttribute("test");
         final String name = (String) session.getAttribute("name");
         final LocalDateTime start = (LocalDateTime) session.getAttribute("start");
         final LocalDateTime end = LocalDateTime.now();
-        final int success = 0;
-        final int total = (int) session.getAttribute("total");
 
-        if (start == null || name == null) {
+        if (start == null || name == null || test == null) {
             response.sendRedirect(baseUrl);
             return;
         }
 
-        final int minutes = end.getMinute() > start.getMinute() ? end.getMinute() - start.getMinute() : end.getMinute() + 60 - start.getMinute();
-        final int seconds = end.getSecond() > start.getSecond() ? end.getSecond() - start.getSecond() : end.getSecond() + 60 - start.getSecond();
+        final int success = test.check();
+        final int total = test.getTotalQuestions();
+
+        final int startmilis = start.getMinute() * 3600 + start.getSecond() * 60;
+        final int endmilis = end.getMinute() * 3600 + end.getSecond() * 60;
+
+        final int minutes = (endmilis - startmilis) / 3600;
+        final int seconds = (endmilis - startmilis) % 3600 / 60;
 
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {;
+        try (PrintWriter out = response.getWriter()) {
             out.print(getPage(name, minutes, seconds, success, total));
         }
     }
@@ -79,6 +86,17 @@ public class Result extends HttpServlet {
         html.append("<b class='bold'>").append(name).append("</b>");
         html.append(", has acertado ").append(success).append(" Preguntas de un total de ").append(total);
         html.append("</p>");
+        
+        html.append("<br><p>");
+        if(total - success < total * 0.7){
+            html.append("Tienes conocimientos amplios sobre la vida.");
+        } else if( total - success < total * 0.5){
+            html.append("Tienes conocimientos medios sobre el mundo");
+        } else {
+            html.append("No sabes nada jon nieve.");
+        }
+        html.append("</p><br>");        
+        
         html.append("<p>");
         html.append("Tiempo de respuesta: ");
         html.append(minutes).append(" ").append(minutes == 1 ? "Minuto" : " Minutos").append(" ");

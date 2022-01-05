@@ -9,7 +9,11 @@ public class Test {
     private final static Question[] QUESTION_REGISTER;
     private int quantity;
     private ArrayList<Question> questions;
-
+    
+    private int current;
+    private ArrayList<Integer> responses;
+    private boolean hints;
+    
     static {
         QUESTION_REGISTER = new Question[]{
             new Question("Capital de España", "No es Barcelona", new String[]{"Madrid", "Barcelona", "Zaragoza"}, 0),
@@ -25,34 +29,36 @@ public class Test {
     }
 
     /**
-     * Constructor. Gets question quantity 
-     * and fills the question List with 
-     * random Questions.
+     * Constructor.Gets question quantity and fills the question List with random Questions.
      * @param quantity Number of random questions
+     * @param hints If hints are shown during the test
      */
-    public Test(final int quantity) {
+    public Test(final int quantity, final boolean hints) {
         this.quantity = quantity;
+        this.hints = hints;
         
         ArrayList<Question> localQuestions = new ArrayList<>(Arrays.asList(QUESTION_REGISTER));
         Collections.shuffle(localQuestions);
 
         final int max = quantity <= localQuestions.size() ? quantity : localQuestions.size();
         this.questions = new ArrayList<>(localQuestions.subList(0, max));
+    
+        this.current = 0;
+        this.responses = new ArrayList<>();
     }
     
     /**
      * Check question responses 
-     * @param responses The responses on a ArrayList
      * @return number of successful checks
      */
-    public int check(final ArrayList<Integer> responses) {
+    public int check() {
         
         int success = 0;
         
         for (int i = 0; i < this.questions.size(); i++) {
-            final Question current = this.questions.get(i);
-            final String correct = current.getStatement();
-            final String local = current.getAnswer(responses.get(i));
+            final Question currentQuestion = this.questions.get(i);
+            final String correct = currentQuestion.getCorrectAnswer();
+            final String local = currentQuestion.getAnswer(responses.get(i));
             
             if(correct.equals(local))
                 success ++;
@@ -61,14 +67,33 @@ public class Test {
         return success;
     }
 
-    public Question getQuestion(int index) {
+    public Question getCurrentQuestion() {
         try {
-            return questions.get(index);
+            return questions.get(current);
         } catch(IndexOutOfBoundsException e){
             return null;
         }
     }
     
+    public boolean isFinal(){
+        return this.current == this.questions.size() - 1 ;
+    }
+    
+    public boolean hasHints() {
+        return hints;
+    }
+    
+    public void setCurrentAnswer(final int answer) {
+        this.responses.add(this.current, answer);
+    }
+    
+    public void next(){
+        this.current++;
+    }
+    
+    public int getTotalQuestions(){
+        return this.questions.size();
+    }
     
     public static int getTotal(int index){
         return index > Test.QUESTION_REGISTER.length ? Test.QUESTION_REGISTER.length : index;

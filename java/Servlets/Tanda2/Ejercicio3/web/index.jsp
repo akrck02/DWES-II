@@ -1,4 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    session = request.getSession(true);
+    session.invalidate();
+    
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -39,16 +44,16 @@
                     <td><input name="question-number" type="text" id="question-number"></td>
                 </tr>
                 <tr>
-                    <td><label class="column"><input name="hints" type="checkbox" value="true"> Mostrar pistas</label></td>
+                    <td><label class="column"><input name="hints" type="checkbox"> Mostrar pistas</label></td>
                     <td><input name="start" type="submit" value="Comenzar"></td>
                 </tr>
             </table>
             <p class="text-error text-center">
                 <% 
-                    if(request.getParameter("invalidNumber") != null)
+                    if(request.getParameter("InvalidNumber") != null)
                         out.print("Introdúzca un número válido");
                     
-                    if(request.getParameter("invalidName") != null)
+                    if(request.getParameter("InvalidName") != null)
                         out.print("Introduzca nombre");
                 %>
             </p>

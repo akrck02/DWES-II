@@ -9,7 +9,6 @@ import bean.Test;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -42,82 +41,78 @@ public class QuestionProcess extends HttpServlet {
         }
 
         HttpSession session = request.getSession(true);
-        Test test = null;
-        Integer index = null;
-        Boolean hints = null;
-        Integer total = null;
 
-        if (request.getParameter("start") != null) {
-            final String name = request.getParameter("name");
+        // If test has not been created, check request params
+        // for the first time.
+        Test test = (Test) session.getAttribute("test");
+        if (test == null) {
+            String name;
+            boolean hints;
+            int quantity = 0;
             
+            //check initial parameters 
+            name = request.getParameter("name");
             if("".equals(name)){
-                response.sendRedirect(baseUrl + "?invalidName");
+                response.sendRedirect(baseUrl + "?InvalidName");
                 return;
             }
-          
+             
+            if(request.getParameter("question-number") != null){
+                try {
+                    quantity = Integer.parseInt(request.getParameter("question-number"));
+                    
+                    if(quantity < 1) {
+                        response.sendRedirect(baseUrl + "?InvalidNumber");
+                        return;
+                    }
+                    
+                } catch (NumberFormatException e) {
+                    response.sendRedirect(baseUrl + "?InvalidNumber");
+                    return;
+                }
+            }
+            
+            System.out.println(request.getParameter("hints"));
+            hints = "on".equalsIgnoreCase(request.getParameter("hints"));
+            
+            //Create new test
+            test = new Test(quantity, hints);
+
             session.setAttribute("start", LocalDateTime.now());
-
-            try {
-                total = Integer.parseInt(request.getParameter("question-number"));
-                hints = Boolean.parseBoolean(request.getParameter("hints"));
-            } catch (NumberFormatException e) {
-                response.sendRedirect(baseUrl + "?invalidNumber");
-                return;
-            }
-
-            total = Test.getTotal(total);
-            test = new Test(total);
-            index = 0;
-
-            session.setAttribute("test", test);
-            session.setAttribute("hints", hints);
-            session.setAttribute("index", index);
             session.setAttribute("name", name);
-            session.setAttribute("total", total);
-            
-        } else if (request.getParameter("next") != null) {
-
-            if (test == null) {
-                test = (Test) session.getAttribute("test");
-            }
-
-            if (index == null) {
-                index = (int) session.getAttribute("index");
-            }
-
-            if (hints == null) {
-                hints = (boolean) session.getAttribute("hints");
-            }
-            
-            
-            if (total == null) {
-                total = (int) session.getAttribute("total");
-            }
-
-            index++;
-            session.setAttribute("index", index);
+            session.setAttribute("test", test);
         }
 
+        String error = null;
+        
+        //If the next button is pressed change index
+        if (request.getParameter("next") != null) {
+            
+            if(request.getParameter("answer") != null){
+                int answer = Integer.parseInt(request.getParameter("answer"));
+                test.setCurrentAnswer(answer);
+                test.next();                        
+            } else {
+                error = "Seleccione una respuesta";
+            }
+            
+        }
+
+        //Draw current question or send user to result page
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
 
-            if (test != null) {
-                Question question = test.getQuestion(index);
-                if (question == null) {
-                    response.sendRedirect(baseUrl + "Resultado");
-                    return;
-                }
-                
-                boolean end = Objects.equals(index, total);
-                out.print(getPage(question, end, hints));
+            Question question = test.getCurrentQuestion();
+            if (question == null) {
+                response.sendRedirect(baseUrl + "Resultado");
                 return;
             }
 
-            response.sendRedirect(baseUrl);
+            out.print(getPage(question, test.isFinal(), test.hasHints(), error));
         }
     }
 
-    private String getPage(Question question, boolean end, boolean hints) {
+    private String getPage(Question question, boolean end, boolean hints, String error) {
 
         StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html>");
@@ -128,14 +123,14 @@ public class QuestionProcess extends HttpServlet {
         html.append("</head>");
         html.append("<body>");
         html.append("<h1 class='title'>").append(question.getStatement()).append("</h1>");
-        html.append("<form action='' method='post'>");
+        html.append("<form action='").append(baseUrl).append("ProcesoPregunta").append("' method='post'>");
 
         String[] answers = question.getAnswers();
 
-        for (String answer : answers) {
+        for (int i = 0; i < answers.length ; i++) {
             html.append("<label class='answer'>");
-            html.append("<input type='radio' name='response'>");
-            html.append("<span>").append(answer).append("<span>");
+            html.append("<input type='radio' name='answer' value='").append(i).append("'>");
+            html.append("<span>").append(answers[i]).append("<span>");
             html.append("</label>");
         }
 
@@ -144,6 +139,10 @@ public class QuestionProcess extends HttpServlet {
 
         if (hints) {
             html.append("<p class='text-info'>* PISTA: ").append(question.getHint()).append("</p>");
+        }
+        
+        if(error != null){
+             html.append("<br><p class='text-error'>").append(error).append("</p>");
         }
 
         html.append("</body>");
