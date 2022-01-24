@@ -27,13 +27,15 @@ public class NewAccountServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init(); //To change body of generated methods, choose Tools | Templates.
 
-        BANNED_USERS = new ArrayList();
+        BANNED_USERS = new ArrayList();        
         BANNED_USERS.add("pepe");
         BANNED_USERS.add("juan");
         BANNED_USERS.add("antonio");
         BANNED_USERS.add("rodolfo");
         BANNED_USERS.add("adolfo");
         BANNED_USERS.add("ecumenio");
+        
+        getServletContext().setAttribute("banned", BANNED_USERS);
     }
 
     /**

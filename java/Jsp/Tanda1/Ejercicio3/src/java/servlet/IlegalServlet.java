@@ -4,21 +4,20 @@
  */
 package servlet;
 
-import bean.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author aketz
  */
-public class MovementServlet extends HttpServlet {
+public class IlegalServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,47 +30,25 @@ public class MovementServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        final HttpSession session = request.getSession(true);
-        if(session.getAttribute("account") == null){
-            response.sendRedirect(getServletContext().getContextPath() + "/movements.jsp");
+      
+        final RequestDispatcher dispatcher = request.getRequestDispatcher("/ilegals.jsp");
+        if(request.getParameter("ban") == null){
+            request.setAttribute("error", "Usuario vacio");
+            dispatcher.forward(request, response);
             return;
         }
         
-        final Account account = (Account) session.getAttribute("account");
-        String error = null;
-        double quantity = 0;
-        try {
-            String quantityString = request.getParameter("quantity");
-            if("".equals(quantityString) || quantityString == null){
-                error = "Cantidad erronea";
-            } else {
-                quantity = Double.parseDouble(quantityString);   
-                if(quantity < 0) {
-                    error = "Cantidad erronea";
-                    quantity = 0;
-                }
-            }
-                
-        } catch (NumberFormatException e) {
-            error = "Cantidad erronea";
+        final String username = request.getParameter("username");
+        ArrayList<String> banned = (ArrayList<String>) getServletContext().getAttribute("banned");
+        
+        if(banned == null){
+           banned = new ArrayList<>();
         }
         
-        if(request.getParameter("spend") != null){
-            final boolean success = account.spend(quantity);
-            if(!success)
-                error = "No se pudo realizar la operación.";
-        }
-        
-        if(request.getParameter("deposit") != null){
-            account.deposit(quantity);
-        }
-        
-        session.setAttribute("account", account);
-        final RequestDispatcher dispatcher = request.getRequestDispatcher("/movements.jsp");
-        request.setAttribute("error", error);
+        banned.add(username);
+        getServletContext().setAttribute("banned", banned);
+        request.setAttribute("success", "Usuario banneado.");
         dispatcher.forward(request, response);
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -86,7 +63,7 @@ public class MovementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect(getServletContext().getContextPath() + "/movements.jsp");
+        processRequest(request, response);
     }
 
     /**

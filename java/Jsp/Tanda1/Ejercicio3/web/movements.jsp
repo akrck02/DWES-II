@@ -6,14 +6,13 @@
 
 <%@page import="bean.Account"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%
-    if (session.getAttribute("account") == null) {
-        response.sendRedirect(getServletContext().getContextPath());
-        return;
-    }
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
 
-    final Account account = (Account) session.getAttribute("account");
-%>
+
+<% final Account account = (Account) session.getAttribute("account");%>
+<c:if test="${account == null}">  
+    <c:redirect url="${request.getServletContext().getContextPath()}"/>  
+</c:if> 
 
 <!DOCTYPE html>
 <html>
@@ -25,15 +24,15 @@
     <body>
         <h1>Movimientos</h1><br>
 
-        <form action="<%= getServletContext().getContextPath() %>/Movement" method="post">
+        <form action="<%= getServletContext().getContextPath()%>/Movement" method="post">
             <table>
                 <tr>
                     <td>Titular</td>
-                    <td><%=account.getOwner()%></td>
+                    <td><c:out value="${account.getOwner()}"/></td>
                 </tr>
                 <tr>
                     <td>Saldo actual</td>
-                    <td><%=account.getBalance()%></td>
+                    <td><c:out value="${account.getBalance()}"/></td>
                 </tr>
                 <tr>
                     <td>Cantidad</td>
@@ -45,11 +44,11 @@
                 <input type="submit" value="gastar" name="spend" />
             </div>    
         </form>
-        <p class="text-error">        
-        <%
-            if(request.getAttribute("error") != null)
-                out.print(request.getAttribute("error"));
-        %>
-        </p>
+
+        <% final String error = (String) request.getAttribute("error");%>
+        <c:if test="${error != null}">  
+            <p class="text-error"> <c:out value="${error}"/></p>
+        </c:if> 
+
     </body>
 </html>
