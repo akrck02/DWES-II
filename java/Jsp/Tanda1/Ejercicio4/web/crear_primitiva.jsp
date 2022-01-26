@@ -9,7 +9,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
 <% 
     final String error = (String) request.getAttribute("error");
-    final Lottery lottery = (Lottery) request.getAttribute("lottery");       
+    final Lottery lottery = (Lottery) session.getAttribute("lottery");       
 %>
 
 <!DOCTYPE html>
@@ -21,7 +21,7 @@
     </head>
     <body>
         <h1>Primitiva</h1>
-        <form action="check" method="post">
+        <form action="<%= getServletContext().getContextPath() + "/date"%>" method="post">
             <table>
                 <tr>
                     <td><label for="day">Dia</label></td>

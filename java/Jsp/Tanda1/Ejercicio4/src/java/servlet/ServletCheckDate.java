@@ -13,12 +13,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author aketz
  */
-public class ServletCheckFecha extends HttpServlet {
+public class ServletCheckDate extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,7 +33,8 @@ public class ServletCheckFecha extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-         final RequestDispatcher dispatcher = request.getRequestDispatcher("/");
+        final RequestDispatcher dispatcher = request.getRequestDispatcher("/");
+        final HttpSession session = request.getSession(true);
        
         if(request.getParameter("new-lottery") == null){
             request.setAttribute("error", "Fecha incorrecta");
@@ -64,7 +66,7 @@ public class ServletCheckFecha extends HttpServlet {
             }
             
             Lottery lottery = new Lottery(date);
-            request.setAttribute("lottery", lottery);
+            session.setAttribute("lottery", lottery);
             dispatcher.forward(request, response);
             
         } catch (NumberFormatException e) {

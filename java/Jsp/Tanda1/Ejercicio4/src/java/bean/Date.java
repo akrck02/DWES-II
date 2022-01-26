@@ -36,14 +36,7 @@ public class Date {
     }
     
     
-    public java.util.Date get() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-        formatter.setLenient(false);
-          
-        try {
-           return formatter.parse( this.year + "/" + this.month + "/" + this.day);
-        } catch (ParseException ex) {
-           return null;
-        }
+    public String toString() {
+        return this.year + "/" + this.month + "/" + this.day;
     }
 }

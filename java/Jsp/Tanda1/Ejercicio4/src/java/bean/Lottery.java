@@ -71,9 +71,9 @@ public class Lottery {
         }
         
         if(bet.getDrawback() == this.drawback)
-           result.append("Con reintegro.");
+           result.append(" Con reintegro.");
         else
-           result.append("Sin reintegro.");
+           result.append(" Sin reintegro.");
                 
         return result.toString();
     }

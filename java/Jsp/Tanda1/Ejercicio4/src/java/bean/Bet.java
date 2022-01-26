@@ -6,6 +6,7 @@ package bean;
 
 import exception.BadBetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -23,13 +24,15 @@ public class Bet {
         if(numbers == null)
             throw new BadBetException("numbers not present");
         
+        System.out.println(Arrays.toString(numbers));
+        
         if(numbers.length != 6)
             throw new BadBetException("6 numbers need to be present");
         
         final ArrayList<Integer> inserted = new ArrayList<>();
         
         for (int n : numbers) {
-            if(n > 1 && n < 50 && !inserted.contains(n))
+            if(n > 0 && n < 50 && !inserted.contains(n))
                 inserted.add(n);
         }
         
@@ -39,6 +42,12 @@ public class Bet {
         
         if(drawback < 0 || drawback > 9)
             throw new BadBetException("Drawback must be a number between 0 and 9");
+        
+        
+        this.name = name;
+        this.administration = administration;
+        this.numbers = numbers;
+        this.drawback = drawback;
         
     }
 

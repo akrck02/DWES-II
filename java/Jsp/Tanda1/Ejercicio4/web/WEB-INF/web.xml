@@ -2,11 +2,19 @@
 <web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
     <servlet>
         <servlet-name>ServletCheckFecha</servlet-name>
-        <servlet-class>servlet.ServletCheckFecha</servlet-class>
+        <servlet-class>servlet.ServletCheckDate</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServletCheckBet</servlet-name>
+        <servlet-class>servlet.ServletCheckBet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ServletCheckFecha</servlet-name>
-        <url-pattern>/check</url-pattern>
+        <url-pattern>/date</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletCheckBet</servlet-name>
+        <url-pattern>/bet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
