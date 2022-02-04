@@ -49,7 +49,6 @@
     if (request.getParameter("watch") != null) {
         if (selected == null) {
             error = "Seleccione una imagen";
-
         } else {
             if (request.getParameter("size") == null) {
                 error = "Seleccione un tamaño";
@@ -99,7 +98,8 @@
         </form>
         <br>
 
-        <%            if (error != null) {
+        <%           
+            if (error != null) {
                 out.print("<p class='text-error'>" + error + "</p>");
             } else {
                 out.print("<p><span class='bold'>Tamaño: </span>" + image.BrokenDownSize() + "</p>");

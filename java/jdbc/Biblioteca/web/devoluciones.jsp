@@ -42,7 +42,7 @@
                 <tr>
                     <td>${status.index + 1}</td>
                     <td>${book.getTitle()}</td> 
-
+                    
                     <c:choose>
                         <c:when test="${selected.contains(book.getId())}">
                             <td><a class="text-error" href='<%=getServletContext().getContextPath()%>/return?id=${book.getId()}&revert'>Revertir devolución</a></td>
@@ -53,6 +53,7 @@
                     </c:choose>
                 </tr>
             </c:forEach>              
+   
         </table>
         <a href='<%=getServletContext().getContextPath()%>/return?save'>Grabar devoluciones</a>
     </body>

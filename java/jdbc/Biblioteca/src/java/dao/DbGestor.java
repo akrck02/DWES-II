@@ -36,9 +36,7 @@ public class DbGestor {
         dataSource.setPassword(PASS);
 
         //Indicamos el tamaño del pool de conexiones
-        dataSource.setInitialSize(5);
-        dataSource.setMaxTotal(5);
-        dataSource.setMaxIdle(5);
+        dataSource.setInitialSize(50);
     }
 
     /**
@@ -91,6 +89,7 @@ public class DbGestor {
                     String sql = "DELETE FROM prestamo WHERE idlibro = ?";
                     PreparedStatement st = con.prepareStatement(sql);
                     st.setInt(1, id);
+                    
                     boolean ok = st.execute();
                     System.out.println(id + " - " + ok);
                     st.close();
