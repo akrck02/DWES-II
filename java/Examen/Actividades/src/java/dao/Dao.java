@@ -273,8 +273,9 @@ public class Dao {
     }
 
     /**
-     * Recibe un ID de actividad y devuelve un mapa ordenado. Clave -> alumnos
-     * participando. Valor -> ultima fecha de asistencia.
+     * Recibe un ID de actividad y devuelve un mapa ordenado. 
+     * Clave -> alumno participando. 
+     * Valor -> ultima fecha de asistencia.
      */
     public LinkedHashMap<Alumno, java.util.Date> mapaAsistenciaActividad(int idActividad) {
 
