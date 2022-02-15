@@ -14,21 +14,23 @@
 <%@page import="dao.Dao"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
+    
+    // Si no se ha hecho login con el impartidor se devuelve al login
     if (session.getAttribute("Impartidor") == null) {
         response.sendRedirect(getServletContext().getContextPath());
         return;
     }
 
-    Impartidor impartidor = (Impartidor) session.getAttribute("Impartidor");
-    Dao db = (Dao) getServletContext().getAttribute("db");
+    // Recoge los datos necesarios para cargar la página
+    final Impartidor impartidor = (Impartidor) session.getAttribute("Impartidor");
+    final ArrayList<Actividad> actividadesImpartidor = (ArrayList<Actividad>) request.getAttribute("actividadesImpartidor");
+    final HashMap<Alumno, Date> mapaAsistencia = (HashMap<Alumno, Date>) request.getAttribute("mapaAsistencia");
+    final Integer actividadSeleccionada = (Integer) request.getAttribute("actividad");
 
-    ArrayList<Actividad> actividadesImpartidor = db.actividadesImpartidor(impartidor);
-
-    HashMap<Alumno, Date> mapaAsistencia = (HashMap<Alumno, Date>) request.getAttribute("mapaAsistencia");
-    Integer actividadSeleccionada = (Integer) request.getAttribute("actividad");
-
-    if (mapaAsistencia == null) {
-        mapaAsistencia = new HashMap();
+    // Si no existe la información necesaria redirige al servlet avisos
+    if(actividadesImpartidor == null || mapaAsistencia == null) {
+        response.sendRedirect(getServletContext().getContextPath() + "/ServletAvisos");
+        return;
     }
 
 %>
@@ -60,8 +62,13 @@
         </table>
 
         <br>
+        
+        <% if(request.getAttribute("avisoRealizado") != null) { %>
+            <p style="color:forestgreen">Aviso realizado exitosamente.</p><br>
+        <% } %>
 
         <% if (actividadSeleccionada != null) { %>
+        <form action="ServletAvisos" method="POST">
             <table>
                 <tr>
                     <th>Nombre</th>
@@ -73,39 +80,40 @@
                 
                 <% 
                     for (Alumno alumno : mapaAsistencia.keySet()) {
-                        
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-                    Date ultima = mapaAsistencia.get(alumno);
-                    
-                    long diferencia =  new Date().getTime() - ultima.getTime();
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                        Date ultima = mapaAsistencia.get(alumno);
+                        long diferencia =  new Date().getTime() - ultima.getTime();
                     
                 %>    
                 
                 <tr>
                     <td><%= alumno.getNombre() %> <%= alumno.getApellidos()%></td>
-                    <td><input type="text" value="<%= alumno.getTelefono() %>"></td>
-                    <td><input type="text" value="<%= alumno.getEmail() %>"></td>
-                    <td>
-                        <%= formatter.format(ultima)%>
-                    </td>
                     
                     <% if(diferencia / 1000 / 60 / 60 / 24 > 100) { %>
-                    <td>
-                        <form action="<%= getServletContext().getContextPath()%> "/ServletAvisos" method="POST">
-                            <input type="hidden" value="${alumno.getDni()}" name="dni">
-                            <label>Email <input type="radio" name="medio" value="Email" /></label>
-                            <label>Telefono <input type="radio" name="medio" value="Telefono" /></label>
-                            <input type="submit" name="" value="Avisar"> 
-                        </form>
+                    
+                        <td><input type="text" name="Telefono-<%=alumno.getDni()%>" value="<%= alumno.getTelefono() %>"></td>
+                        <td><input type="text" name="Email-<%=alumno.getDni()%>" value="<%= alumno.getEmail() %>"></td>
+                        <td><%= formatter.format(ultima)%></td>
+                        <td>
+                            <label>Email <input type="radio" name="medio-<%=alumno.getDni()%>" value="Email" /></label>
+                            <label>Telefono <input type="radio" name="medio-<%=alumno.getDni()%>" value="Telefono" /></label>
+                            <button type="submit" value="<%=alumno.getDni()%>" name="avisar" >Avisar</button>
+                        </td>
                         
-                    </td>
-                    <% } %>                    
+                    <% } else {%>
+                    
+                       <td><%= alumno.getTelefono() %></td>
+                       <td><%= alumno.getEmail() %></td>
+                       <td><%= formatter.format(ultima)%></td>
+                       
+                    <% } %>
                 </tr>
                         
                 <%        
                     }
                 %>
             </table>
+        </form>
         <% }%>
     </body>
 </html>

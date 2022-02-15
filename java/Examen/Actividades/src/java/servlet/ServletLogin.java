@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author aketz
+ * @author aketza 
  */
 public class ServletLogin extends HttpServlet {
 
@@ -26,11 +26,16 @@ public class ServletLogin extends HttpServlet {
     
     @Override
     public void init() throws ServletException {
-    
+        
+        // Crea el pool de base de datos al iniciar la aplicación.
+        // y lo guarda en el contexto general de la app.
+        // --------------------------------------------------------------
+        // Este es el servlet de entrada a la web así nos aseguramos 
+        // de que siempre esté cargado y solo se encuentre una instancia.
         this.db = new Dao();
         getServletContext().setAttribute("db", db);
         
-        super.init(); //To change body of generated methods, choose Tools | Templates.
+        super.init();
     }
 
     
@@ -58,13 +63,13 @@ public class ServletLogin extends HttpServlet {
         String usuario = request.getParameter("usuario");
         String clave = request.getParameter("clave");
         
-        if(usuario == null || "".equals(usuario)){
+        if("".equals(usuario)){
             request.setAttribute("error", "El usuario no puede estár vacio");
             indexDispatcher.forward(request, response);
             return;
         }
         
-        if(clave == null || "".equals(clave)){
+        if("".equals(clave)){
             request.setAttribute("error", "La contaseña no puede estár vacia");
             indexDispatcher.forward(request, response);
             return;
@@ -125,7 +130,7 @@ public class ServletLogin extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.sendRedirect(getServletContext().getContextPath());
     }
 
     /**

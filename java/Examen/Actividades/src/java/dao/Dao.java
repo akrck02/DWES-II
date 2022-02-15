@@ -11,16 +11,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
  *
- * @author aketz
+ * @author aketza
  */
 public class Dao {
 
@@ -166,7 +164,7 @@ public class Dao {
      */
     public ArrayList<Actividad> actividadesParticipa(Alumno alumno) {
 
-        final String sql = "SELECT id, impartidor_id, nombre, coste_mensual FROM actividad WHERE id IN (SELECT actividad_id FROM participa WHERE alumno_dni = ?)";
+        final String sql = "SELECT nombre, id, impartidor_id, coste_mensual FROM actividad JOIN participa ON alumno_dni=? AND id = actividad_id";
         ArrayList<Actividad> actividades = new ArrayList<>();
 
         try {
@@ -183,10 +181,7 @@ public class Dao {
                 final String nombreActividad = rs.getString("nombre");
                 final double costeMensualActividad = rs.getDouble("coste_mensual");
 
-                String nombreImpartidor = null;
-                String apellidoImpartidor = null;
-
-                Impartidor impartidor = loginImpartidor(idActividad, "damocles");
+                Impartidor impartidor = loginImpartidor(idImpartidor, "damocles");
                 actividades.add(new Actividad(idActividad, nombreActividad, costeMensualActividad, impartidor));
             }
 
@@ -213,10 +208,11 @@ public class Dao {
      */
     public ArrayList<Actividad> actividadesLibresNoParticipa(Alumno alumno) {
 
-        final String sql
-                = "SELECT id, impartidor_id, nombre, coste_mensual FROM actividad "
-                + "WHERE id IN (SELECT actividad_id FROM participa WHERE alumno_dni != ?) "
-                + "AND capacidad > (SELECT count(actividad_id) FROM participa WHERE actividad_id = actividad.id)";
+        final String sql = "SELECT DISTINCT id, nombre, actividad_id, impartidor_id, coste_mensual FROM participa"
+                + " JOIN actividad ON actividad.id = participa.actividad_id"
+                + " WHERE alumno_dni != ? "
+                + " AND actividad.capacidad > (SELECT count(participa.actividad_id) FROM participa WHERE participa.actividad_id = actividad.id)"
+                + " AND actividad.nombre NOT IN (Select nombre from actividad JOIN participa ON actividad_id = id WHERE alumno_dni = ?) ";
 
         ArrayList<Actividad> actividades = new ArrayList<>();
 
@@ -224,20 +220,19 @@ public class Dao {
             Connection con = dataSource.getConnection();
             PreparedStatement st = con.prepareStatement(sql);
             st.setString(1, alumno.getDni());
-
+            st.setString(2, alumno.getDni());
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
+
                 final int idActividad = rs.getInt("id");
                 final int idImpartidor = rs.getInt("impartidor_id");
                 final String nombreActividad = rs.getString("nombre");
                 final double costeMensualActividad = rs.getDouble("coste_mensual");
 
-                String nombreImpartidor = null;
-                String apellidoImpartidor = null;
-
                 Impartidor impartidor = loginImpartidor(idImpartidor, "damocles");
                 actividades.add(new Actividad(idActividad, nombreActividad, costeMensualActividad, impartidor));
+
             }
 
             rs.close();
@@ -255,8 +250,26 @@ public class Dao {
     /**
      * Deducir.
      */
-    public void inscribir() {
+    public boolean inscribir(int idActividad, String dniAlumno) {
 
+        final String sql = "INSERT INTO participa(actividad_id, alumno_dni, ultima_asistencia) VALUES(?,?,NOW())";
+        boolean inscrito = false;
+
+        try {
+            Connection con = dataSource.getConnection();
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setInt(1, idActividad);
+            st.setString(2, dniAlumno);
+            st.execute();
+            st.close();
+            con.close();
+            
+            inscrito = true;
+        } catch (SQLException ex) {
+            System.err.println("Error en metodo inscribir: " + ex);
+        }
+
+        return inscrito;
     }
 
     /**
@@ -265,48 +278,27 @@ public class Dao {
      */
     public LinkedHashMap<Alumno, java.util.Date> mapaAsistenciaActividad(int idActividad) {
 
-        final String sql = "SELECT ultima_asistencia, alumno_dni FROM participa WHERE actividad_id = ?";
+        final String sql = "SELECT ultima_asistencia, alumno_dni, apellidos, nombre, telefono, email FROM participa"
+                + " JOIN alumno ON participa.alumno_dni = alumno.dni"
+                + " WHERE actividad_id = ?";
+        
         LinkedHashMap<Alumno, Date> mapa = new LinkedHashMap<>();
         try {
             Connection con = dataSource.getConnection();
             PreparedStatement st = con.prepareStatement(sql);
             st.setInt(1, idActividad);
-
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
 
                 final java.util.Date ultimaAsistencia = rs.getDate("ultima_asistencia");
                 final String dniAlumno = rs.getString("alumno_dni");
+                final String apellidos = rs.getString("apellidos");
+                final String nombre = rs.getString("nombre");
+                final String telefono = rs.getString("telefono");
+                final String email = rs.getString("email");
 
-                final String sql2 = "SELECT apellidos, nombre, telefono, email FROM alumno WHERE dni = ?";
-                Alumno alumno = null;
-
-                try {
-                    Connection con2 = dataSource.getConnection();
-                    PreparedStatement st2 = con2.prepareStatement(sql2);
-                    st2.setString(1, dniAlumno);
-
-                    ResultSet rs2 = st2.executeQuery();
-
-                    if (rs2.next()) {
-
-                        final String apellidos = rs2.getString("apellidos");
-                        final String nombre = rs2.getString("nombre");
-                        final String telefono = rs2.getString("telefono");
-                        final String email = rs2.getString("email");
-
-                        alumno = new Alumno(dniAlumno, apellidos, nombre, telefono, email);
-                    }
-
-                    rs2.close();
-                    st2.close();
-                    con2.close();
-
-                } catch (SQLException ex) {
-                    System.err.println("Error en metodo mapaAsistenciaActividad encontrando alumno: " + ex);
-                }
-
+                Alumno alumno = new Alumno(dniAlumno, apellidos, nombre, telefono, email);
                 mapa.put(alumno, ultimaAsistencia);
 
             }

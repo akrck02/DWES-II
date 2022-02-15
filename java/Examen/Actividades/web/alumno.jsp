@@ -1,7 +1,7 @@
 <%-- 
     Document   : alumno.jsp
     Created on : 04-feb-2022, 10:12:53
-    Author     : aketz
+    Author     : aketza
 --%>
 
 <%@page import="java.util.HashSet"%>
@@ -14,25 +14,30 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
 <%
+    // Si no se ha hecho login como alumno, redirige al login
     if (session.getAttribute("Alumno") == null) {
         response.sendRedirect(getServletContext().getContextPath());
         return;
     }
 
-    Dao db = (Dao) getServletContext().getAttribute("db");
-    Alumno alumno = (Alumno) session.getAttribute("Alumno");
-    ArrayList<Actividad> actividadesParticipa = db.actividadesParticipa(alumno);
-    ArrayList<Actividad> actividadesNoParticipa = db.actividadesLibresNoParticipa(alumno);
-    HashSet<Integer> actividadesPendientes = (HashSet<Integer>) session.getAttribute("inscripcionesPendientes");
+    // Coge información necesaria para cargar la página
+    final Alumno alumno = (Alumno) session.getAttribute("Alumno");
+    final ArrayList<Actividad> actividadesParticipa = (ArrayList<Actividad>) request.getAttribute("actividadesParticipa");
+    final ArrayList<Actividad> actividadesNoParticipa = (ArrayList<Actividad>) request.getAttribute("actividadesNoParticipa");
+    final HashSet<Integer> actividadesPendientes = (HashSet<Integer>) session.getAttribute("inscripcionesPendientes");
     
-    if (actividadesPendientes == null) {
-        actividadesPendientes = new HashSet();
+    // Si no existe la información necesaria redirige al servlet inscripcion
+    if(actividadesParticipa == null || actividadesNoParticipa == null) {
+        response.sendRedirect(getServletContext().getContextPath() + "/ServletInscripcion");
+        return;
     }
-
+    
+    // Guarda las constantes en la página
     pageContext.setAttribute("alumno", alumno);
     pageContext.setAttribute("actividadesParticipa", actividadesParticipa);
     pageContext.setAttribute("actividadesNoParticipa", actividadesNoParticipa);
     pageContext.setAttribute("actividadesPendientes", actividadesPendientes);
+
 %>
 
 
@@ -40,10 +45,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Actividades.com - <c:out value="${alumno.getNombre()}"/> <c:out value="${alumno.getApellidos()}"/></title>
     </head>
     <body>
-        <h1>SOCIO: <c:out value="${alumno.getNombre()}"/> </h1>
+        <h1>SOCIO: <c:out value="${alumno.getNombre()}"/> <c:out value="${alumno.getApellidos()}"/> </h1>
 
         <table border="0">
             <caption>Actividades asignadas</caption>
@@ -64,9 +69,9 @@
         </tbody>
     </table>
 
-
+    <br>
     <table border="0">
-        <caption>Actividades asignadas</caption>
+        <caption>Actividades disponibles</caption>
         <tr>
             <th>Actividad</th>
             <th>Impartidor</th>
@@ -74,8 +79,6 @@
         </tr>
 
         <c:forEach items="${actividadesNoParticipa}" var="actividad">
-            
-
                 <c:choose>
                     <c:when test='${!actividadesPendientes.contains(actividad.getId())}'>
                         <tr>

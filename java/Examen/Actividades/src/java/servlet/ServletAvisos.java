@@ -4,15 +4,17 @@
  */
 package servlet;
 
+import bean.Actividad;
 import bean.Alumno;
+import bean.Impartidor;
 import dao.Dao;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,8 +27,6 @@ import javax.servlet.http.HttpSession;
  * @author aketz
  */
 public class ServletAvisos extends HttpServlet {
-
-    private Dao db;
 
     @Override
     public void init() throws ServletException {
@@ -48,42 +48,52 @@ public class ServletAvisos extends HttpServlet {
         
         HttpSession sesion = request.getSession(true);
         
+        //Si no se ha hecho login con el impartidor, se devuelve al login
         if (sesion.getAttribute("Impartidor") == null) {
             response.sendRedirect(getServletContext().getContextPath());
             return;
         }
         
-        this.db = (Dao) getServletContext().getAttribute("db");
-        RequestDispatcher impartidorDispatcher = request.getRequestDispatcher("/impartidor.jsp");
+        // Recoge las actividades del impartidor de la base de datos
+        final Dao db = (Dao) getServletContext().getAttribute("db");
+        final Impartidor impartidor = (Impartidor) sesion.getAttribute("Impartidor");
+        final ArrayList<Actividad> actividadesImpartidor = db.actividadesImpartidor(impartidor);
         
+        // Guarda los datos necesarios para la página jsp
+        request.setAttribute("actividadesImpartidor", actividadesImpartidor);
+        request.setAttribute("mapaAsistencia", new LinkedHashMap<Alumno, java.util.Date>());
         
-                // si pulsa avisar
+        // si pulsa avisar
         if(request.getParameter("avisar") != null) {
-            System.out.println("EScribiendo");
+            
             String direccion = "";
-            
-            String dni = request.getParameter("dni");
-            
-            if("Telefono".equals(request.getParameter("medio"))){
-                direccion = request.getParameter("Telefono");
+            String dni = request.getParameter("avisar");
+           
+            // Si es un telefono recoge el telefono
+            if("Telefono".equals(request.getParameter("medio-" + dni))){
+                direccion = request.getParameter("Telefono-" + dni);
             }
             
-            if("Email".equals(request.getParameter("medio"))){
-                direccion = request.getParameter("Email");
+            // Si es un email recoge el email
+            if("Email".equals(request.getParameter("medio-" + dni))){
+                direccion = request.getParameter("Email-" + dni);
             }
             
-            BufferedWriter bw = new BufferedWriter(new FileWriter(getServletContext().getRealPath("files/avisos")));
-            bw.write(dni + " " + direccion);
+            // Escribe una linea en el fichero y lo cierra
+            BufferedWriter bw = new BufferedWriter(new FileWriter(getServletContext().getRealPath("files/avisos"),true));
+            bw.write(dni + " " + direccion + "\n");
             bw.close();
             
+            // Devuelve a impartidor.jsp y mostrar notificación 
+            request.setAttribute("avisoRealizado", true);
+            request.getRequestDispatcher("/impartidor.jsp").forward(request, response);
+            return;
         }
         
         
         // si se selecciona una actividad
         if(request.getParameter("actividad") != null) {
-            System.out.println("Lol");
             try {
-                
                 int idActividad = Integer.parseInt(request.getParameter("actividad"));
                 HashMap<Alumno, Date> mapaAsistencia = db.mapaAsistenciaActividad(idActividad);
                 
@@ -94,11 +104,13 @@ public class ServletAvisos extends HttpServlet {
                 System.out.println("Error en ServletAvisos: actividad no númerica");
             }
             
-            impartidorDispatcher.forward(request, response);
+            request.getRequestDispatcher("/impartidor.jsp").forward(request, response);
             return;
         }
         
 
+        
+        request.getRequestDispatcher("/impartidor.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

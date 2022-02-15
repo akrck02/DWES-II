@@ -2,8 +2,6 @@
 
 > DAO is a java class that access database and inserts / update / delete / create data on them. 
 
-
-
 ## Importing the driver
 
 We are using mySQL 8 here so we will import the driver:

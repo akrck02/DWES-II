@@ -4,8 +4,10 @@
  */
 package servlet;
 
+import bean.Actividad;
+import bean.Alumno;
+import dao.Dao;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import javax.servlet.ServletException;
@@ -32,13 +34,29 @@ public class ServletInscripcion extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        HttpSession sesion = request.getSession(true);  
-        HashSet<Integer> actividadesPendientes = (HashSet<Integer>) sesion.getAttribute("inscripcionesPendientes"); 
+        HttpSession sesion = request.getSession(true);
+        final Alumno alumno = (Alumno) sesion.getAttribute("Alumno");
         
+        // Si no se ha hecho login como alumno, redirige al servlet
+        if(alumno == null){
+            response.sendRedirect(getServletContext().getContextPath());
+            return;
+        }
+        
+        // Coge actividades pendiente de sesión, si no hay, crea el hashmap
+        HashSet<Integer> actividadesPendientes = (HashSet<Integer>) sesion.getAttribute("inscripcionesPendientes");
         if(actividadesPendientes ==  null){
             actividadesPendientes = new HashSet();
             sesion.setAttribute("inscripcionesPendientes", actividadesPendientes);
         }
+        
+        // Cargar actividades asignadas y disponibles para la JSP
+        final Dao db = (Dao) getServletContext().getAttribute("db");
+        final ArrayList<Actividad> actividadesParticipa = db.actividadesParticipa(alumno);
+        final ArrayList<Actividad> actividadesNoParticipa = db.actividadesLibresNoParticipa(alumno);
+        
+        request.setAttribute("actividadesParticipa" , actividadesParticipa);
+        request.setAttribute("actividadesNoParticipa" , actividadesNoParticipa);
         
         // Apuntar en sesion la inscripcion
         if(request.getParameter("apuntar") != null){
@@ -46,11 +64,9 @@ public class ServletInscripcion extends HttpServlet {
                 actividadesPendientes.add(Integer.parseInt(request.getParameter("apuntar")));
             } catch (NumberFormatException e) {}
             
-           
-            
             sesion.setAttribute("inscripcionesPendientes", actividadesPendientes);
-            response.sendRedirect(getServletContext().getContextPath() + "/alumno.jsp");    
-            return;
+            request.getRequestDispatcher("/alumno.jsp").forward(request, response);
+            return; 
         }
 
         // Borrar de sesion la inscripción
@@ -60,16 +76,28 @@ public class ServletInscripcion extends HttpServlet {
             } catch (NumberFormatException e) {}
             
             sesion.setAttribute("inscripcionesPendientes", actividadesPendientes);
-            response.sendRedirect(getServletContext().getContextPath() + "/alumno.jsp");    
+            request.getRequestDispatcher("/alumno.jsp").forward(request, response);
             return;
         }
         
         // Grabar en base de datos las inscripciones.
         if(request.getParameter("grabar") != null) {
             
+            for (Integer idActividad : actividadesPendientes) {
+                db.inscribir(idActividad, alumno.getDni());
+            }
             
+            // Recarga la información de la base de datos
+            request.setAttribute("actividadesParticipa" , db.actividadesParticipa(alumno));
+            request.setAttribute("actividadesNoParticipa" , db.actividadesLibresNoParticipa(alumno));
+            
+            // Vacia el hashset
+            sesion.setAttribute("inscripcionesPendientes", new HashSet());
             
         }
+        
+        
+        request.getRequestDispatcher("/alumno.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -98,7 +126,7 @@ public class ServletInscripcion extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.sendRedirect(getServletContext().getContextPath());
     }
 
     /**
